@@ -3,42 +3,9 @@ import React, { FC, useEffect, useState } from "react"
 
 const transition = { type: 'tween', duration: 0.4, ease: 'easeInOut' }
 
-const variants: Record<string, Variants | Record<string, Variants>> = {
-  wrapper: {
-    hidden: { y: '-100%',transition: { ...transition, staggerChildren: 0.1, when: 'afterChildren' } as Transition },
-    visible: { y: '0%', transition: { ...transition } }
-  },
-  E: {
-    hidden: { fillOpacity: 0.5, translateX: -100, transition },
-    visible: { fillOpacity: 1, translateX: 0, transition }
-  },
-  N: {
-    hidden: { fillOpacity: 0.5, translateX: -50, translateY: -100, transition },
-    visible: { fillOpacity: 1, translateX: 0, translateY: 0, transition }
-  },
-  Z: {
-    hidden: { fillOpacity: 0.5, translateX: -100, translateY: 50, transition },
-    visible: { fillOpacity: 1, translateX: 0, translateY: 0, transition }
-  },
-  O1: {
-    hidden: { fillOpacity: 0.5, scale: 1.4, transition },
-    visible: { fillOpacity: 1, scale: 1, transition }
-  },
-  O2: {
-    hidden: { fillOpacity: 0.5, scale: 0, transition },
-    visible: { fillOpacity: 1, scale: 1, transition }
-  }
-}
-
-export const Welcome: FC = () => {
-  const [show, setShow] = useState(true)
-
-  useEffect(() => {
-    setTimeout(() => setShow(false), 1000)
-  }, [])
-
+export const Welcome: FC<{ show: boolean }> = ({ show }) => {
   return <AnimatePresence initial={false}>
-    { show && <motion.div key="wrapper" variants={variants.wrapper} initial="hidden" animate="visible" exit="hidden" className="bg-red w-screen h-screen absolute left-0 right-0 flex items-center justify-center">
+    { show && <motion.div key="wrapper" variants={variants.wrapper} initial="hidden" animate="visible" exit="hidden" className="z-10 bg-red w-screen h-screen absolute left-0 right-0 flex items-center justify-center">
       <svg className="overflow-hidden" width="433" height="116" viewBox="0 0 433 116" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <clipPath id="clip-e"><rect x="9" y="9" width="97" height="97" fill="#C4C4C4"/></clipPath>
@@ -73,6 +40,33 @@ export const Welcome: FC = () => {
       </svg>
     </motion.div> }
   </AnimatePresence>
+}
+
+const variants: Record<string, Variants | Record<string, Variants>> = {
+  wrapper: {
+    hidden: { y: '-100%',transition: { ...transition, staggerChildren: 0.1, when: 'afterChildren' } as Transition },
+    visible: { y: '0%', transition: { ...transition } }
+  },
+  E: {
+    hidden: { fillOpacity: 0.5, translateX: -100, transition },
+    visible: { fillOpacity: 1, translateX: 0, transition }
+  },
+  N: {
+    hidden: { fillOpacity: 0.5, translateX: -50, translateY: -100, transition },
+    visible: { fillOpacity: 1, translateX: 0, translateY: 0, transition }
+  },
+  Z: {
+    hidden: { fillOpacity: 0.5, translateX: -100, translateY: 50, transition },
+    visible: { fillOpacity: 1, translateX: 0, translateY: 0, transition }
+  },
+  O1: {
+    hidden: { fillOpacity: 0.5, scale: 1.4, transition },
+    visible: { fillOpacity: 1, scale: 1, transition }
+  },
+  O2: {
+    hidden: { fillOpacity: 0.5, scale: 0, transition },
+    visible: { fillOpacity: 1, scale: 1, transition }
+  }
 }
 
 const paths = {
