@@ -9,6 +9,8 @@
     "lint": "eslint . --ignore-path .gitignore"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^1.11.9",
+    "date-fns": "^2.21.1",
     "eslint": "*",
     "eslint-plugin-import": "*",
     "eslint-plugin-promise": "*",
