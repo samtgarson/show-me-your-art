@@ -4,7 +4,7 @@ import React, { FC, useContext, useEffect, useMemo, useRef, useState } from "rea
 import ReactMapGL, { FlyToInterpolator, Layer, MapRef, NavigationControl, Source, ViewportProps } from 'react-map-gl'
 import { Coordinates, Submissions } from '~/types/data'
 import { StateContext } from "../pages/_app"
-import { layerStyles, loadImages, toGeoJson } from '../util/map-data'
+import { layerStyles, toGeoJson } from '../util/map-data'
 
 const { publicRuntimeConfig: { mapboxApiToken } } = config()
 
@@ -36,10 +36,6 @@ export const Map: FC<MapProps> = ({ fetchData, data }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [start])
 
-  const onLoad = () => {
-    if (!mapRef.current) return
-    loadImages(mapRef.current.getMap())
-  }
   const json = useMemo(() => data && toGeoJson(data), [data])
 
   return <div className="absolute h-screen w-screen left-0 top-0">
@@ -47,8 +43,7 @@ export const Map: FC<MapProps> = ({ fetchData, data }) => {
       {...viewport}
       ref={mapRef}
       mapboxApiAccessToken={mapboxApiToken}
-      onViewportChange={(nextViewport: ViewportProps) => setViewport(nextViewport)}
-      onLoad={onLoad}
+      onViewportChange={(nextViewport: ViewportProps) => { setViewport(nextViewport) }}
       width="100%"
       height="100%"
     >
