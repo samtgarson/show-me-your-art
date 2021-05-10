@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "es5",
     "lib": [
-      "esnext"
+      "esnext",
+      "dom"
     ],
     "allowJs": true,
     "strict": true,
@@ -16,8 +17,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "typeRoots": [
-      "node_modules/@types",
-      "types/stubs"
+      "./node_modules/@types",
+      "./types/stubs"
     ],
     "baseUrl": ".",
     "paths": {

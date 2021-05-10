@@ -1,5 +1,5 @@
 :root {
-  --red: #DF0000
+  --grey: #EFF1F1
 }
 
 
@@ -10,10 +10,14 @@
 @layer base {
   html,
   body {
+    @apply antialiased;
     padding: 0;
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-family: 'SF Mono', SFMono-Regular, ui-monospace, 'DejaVu Sans Mono', Menlo, Consolas, monospace;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 400;
   }
 
   a {

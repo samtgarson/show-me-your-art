@@ -1,11 +1,11 @@
 import { AnimatePresence, motion, Transition, Variants } from "framer-motion"
-import React, { FC, useEffect, useState } from "react"
+import React, { FC } from "react"
 
 const transition = { type: 'tween', duration: 0.4, ease: 'easeInOut' }
 
 export const Welcome: FC<{ show: boolean }> = ({ show }) => {
   return <AnimatePresence initial={false}>
-    { show && <motion.div key="wrapper" variants={variants.wrapper} initial="hidden" animate="visible" exit="hidden" className="z-10 bg-red w-screen h-screen absolute left-0 right-0 flex items-center justify-center">
+    { show && <motion.div key="wrapper" variants={variants.wrapper} initial="hidden" animate="visible" exit="hidden" className="z-50 bg-white w-screen h-screen absolute left-0 right-0 flex items-center justify-center">
       <svg className="overflow-hidden" width="433" height="116" viewBox="0 0 433 116" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <clipPath id="clip-e"><rect x="9" y="9" width="97" height="97" fill="#C4C4C4"/></clipPath>
@@ -14,28 +14,28 @@ export const Welcome: FC<{ show: boolean }> = ({ show }) => {
           <clipPath id="clip-o"><rect x="325" y="9" width="97" height="97" fill="#C4C4C4"/></clipPath>
         </defs>
         <g style={{ clipPath: 'url(#clip-e)', animation: '0.3s 0.2s both fadeIn ease-out' }}>
-          <motion.path variants={variants.E} d={paths.E1} fill="white"/>
-          <motion.path variants={variants.E} d={paths.E2} fill="white"/>
-          <motion.path variants={variants.E} d={paths.E3} fill="white"/>
+          <motion.path variants={variants.E} d={paths.E1} fill="black"/>
+          <motion.path variants={variants.E} d={paths.E2} fill="black"/>
+          <motion.path variants={variants.E} d={paths.E3} fill="black"/>
         </g>
         <g style={{ clipPath: 'url(#clip-n)', animation: '0.3s 0.3s both fadeIn ease-out' }}>
-          <motion.path variants={variants.N} d={paths.N1} fill="white"/>
-          <motion.path variants={variants.N} d={paths.N2} fill="white"/>
-          <motion.path variants={variants.N} d={paths.N3} fill="white"/>
+          <motion.path variants={variants.N} d={paths.N1} fill="black"/>
+          <motion.path variants={variants.N} d={paths.N2} fill="black"/>
+          <motion.path variants={variants.N} d={paths.N3} fill="black"/>
         </g>
         <g style={{ clipPath: 'url(#clip-z)', animation: '0.3s 0.4s both fadeIn ease-out' }}>
-          <motion.path variants={variants.Z} d={paths.Z1} fill="white"/>
-          <motion.path variants={variants.Z} d={paths.Z2} fill="white"/>
-          <motion.path variants={variants.Z} d={paths.Z3} fill="white"/>
+          <motion.path variants={variants.Z} d={paths.Z1} fill="black"/>
+          <motion.path variants={variants.Z} d={paths.Z2} fill="black"/>
+          <motion.path variants={variants.Z} d={paths.Z3} fill="black"/>
         </g>
         <g style={{ clipPath: 'url(#clip-o)', animation: '0.3s 0.5s both fadeIn ease-out' }}>
           <motion.g variants={variants.O1}>
-            <motion.path d={paths.O1} fill="white"/>
-            <motion.path d={paths.O2} fill="white"/>
-            <motion.path d={paths.O3} fill="white"/>
-            <motion.path d={paths.O4} fill="white"/>
+            <motion.path d={paths.O1} fill="black"/>
+            <motion.path d={paths.O2} fill="black"/>
+            <motion.path d={paths.O3} fill="black"/>
+            <motion.path d={paths.O4} fill="black"/>
           </motion.g>
-          <motion.path variants={variants.O2} d={paths.O5} fill="white"/>
+          <motion.path variants={variants.O2} d={paths.O5} fill="black"/>
         </g>
       </svg>
     </motion.div> }

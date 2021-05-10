@@ -3,13 +3,15 @@ export type Coordinates = {
   longitude: number
 }
 
-export type Print = 'mela' | 'pera'
-
 export type Submission = {
   id: string
-  print: Print
+  print: string
+  artist: string
   geography: string
   created_at: Date
+  image_id: string
+  width: number
+  height: number
 }
 
 export type SubmissionWithMeta = Submission & {

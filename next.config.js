@@ -7,4 +7,7 @@ module.exports = {
   future: {
     webpack5: true,
   },
+  images: {
+    domains: [process.env.SUPABASE_URL.replace('https://', '')],
+  }
 }

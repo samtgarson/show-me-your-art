@@ -1,0 +1,17 @@
+.buttonLine {
+  height: 1px;
+  width: 100%;
+  top: 0.5em;
+  left: 0;
+  position: absolute;
+  background-color: currentColor;
+  transition: transform .2s ease-in-out;
+}
+
+.buttonLineTop {
+  transform: translateY(-0.2em);
+}
+
+.buttonLineBottom {
+  transform: translateY(0.2em);
+}

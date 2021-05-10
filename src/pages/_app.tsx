@@ -1,26 +1,16 @@
-import React, { createContext, useEffect, useState } from 'react'
-import Head from 'next/head'
 import { AppProps } from 'next/app'
+import Head from 'next/head'
+import React from 'react'
 import '../styles/globals.scss'
-import { Welcome } from '../components/welcome'
-
-export const StateContext = createContext({ start: false })
 
 const CustomApp = ({ Component, pageProps }: AppProps): JSX.Element => {
-  const [start, setStart] = useState(false)
-
-  useEffect(() => {
-    setTimeout(() => setStart(true), 1000)
-  }, [])
-
-  return <StateContext.Provider value={{ start }}>
+  return <>
     <Head>
-      <title>Show Me Your Enzo</title>
+      <title>Show Me Your Art</title>
       <link rel="shortcut icon" href="/mela.png" />
     </Head>
-    <Welcome show={!start} />
     <Component {...pageProps} />
-  </StateContext.Provider>
+  </>
 }
 
 export default CustomApp

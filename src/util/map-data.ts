@@ -22,37 +22,24 @@ export const layerStyles: LayerProps[] = [
     source: 'submissions',
     filter: ['!', ['has', 'point_count']],
     paint: {
-      'circle-radius': {
-        'base': 1.75,
-        'stops': [
-          [0, 6],
-          [15, 10]
-        ]
-      },
+      'circle-radius': [
+        'case',
+        ['boolean', ['feature-state', 'selected'], false],
+        // ['interpolate', ['linear'], ['zoom'], [
+        //   0, 6,
+        //   15, 10
+        // ]],
+        20,
+        6
+      ],
       'circle-color': [
         'match',
         ['get', 'print'],
         'mela', '#CC261E',
         'pera', '#09833A',
+        'pantera', '#000',
         '#CC261E' // other
       ]
-    }
-  },
-  {
-    id: 'point-clustered-labels',
-    type: 'symbol',
-    source: 'submissions',
-    filter: ['has', 'point_count'],
-    layout: {
-      'text-field': '{point_count}',
-      'text-font': [
-        'Open Sans Bold',
-        'Arial Unicode MS Bold'
-      ],
-      'text-size': 16
-    },
-    paint: {
-      'text-color': '#ffffff'
     }
   },
   {
@@ -73,8 +60,26 @@ export const layerStyles: LayerProps[] = [
         ['get', 'print'],
         'mela', '#CC261E',
         'pera', '#09833A',
+        'pantera', '#000',
         '#CC261E' // other
       ]
+    }
+  },
+  {
+    id: 'point-clustered-labels',
+    type: 'symbol',
+    source: 'submissions',
+    filter: ['has', 'point_count'],
+    layout: {
+      'text-field': '{point_count}',
+      'text-font': [
+        'Open Sans Bold',
+        'Arial Unicode MS Bold'
+      ],
+      'text-size': 14
+    },
+    paint: {
+      'text-color': '#ffffff'
     }
   }
 ]
