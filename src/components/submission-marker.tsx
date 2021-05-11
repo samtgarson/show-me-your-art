@@ -34,7 +34,7 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({ feature, selectedS
     'transition-all flex items-center justify-center text-white cursor-pointer transform hover:scale-110',
     {
       '-ml-6 -mt-6 w-12 h-12': big,
-      [`w-5 h-5 -ml-2 -mt-2 `]: !big,
+      'w-5 h-5 -ml-2 -mt-2': !big,
       'font-thin text-3xl': selected,
       'font-bold text-xl': cluster
     }
@@ -42,12 +42,16 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({ feature, selectedS
 
   const content = useMemo(() => {
     if (cluster) return feature.properties?.point_count
-    if (selected) return '×'
-  }, [cluster, feature, selected])
+    return '×'
+  }, [cluster, feature])
 
 
   return <Marker key={id} latitude={geom.coordinates[1]} longitude={geom.coordinates[0]}>
-    <span className={classes} style={{ backgroundColor: `var(--${artist})` }} onClick={clickHandler}>{ content }</span>
+    <span
+      className={classes}
+      style={{ backgroundColor: `var(--${artist})`, color: !big ? `var(--${artist})` : 'white' }}
+      onClick={clickHandler}
+    >{ content }</span>
   </Marker>
 }
 

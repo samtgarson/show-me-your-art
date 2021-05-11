@@ -79,6 +79,7 @@ export const Map: FC<MapProps> = ({ viewport, setViewport, search, artist }) => 
       ref={mapRef}
       mapboxApiAccessToken={mapboxApiToken}
       onViewportChange={(nextViewport: ViewportProps) => { setViewport(nextViewport) }}
+      onClick={_ => setSelected(undefined)}
       width="100%"
       height="100%"
     >

@@ -36,11 +36,11 @@ export class DataClient {
     return hydrate(data) || []
   }
 
-  async imageUrl (submission: Submission): Promise<string> {
+  async imageUrl ({ artist, image_id }: Pick<SubmissionWithMeta, 'image_id' | 'artist'>): Promise<string> {
     const { signedURL, error } = await this.client
       .storage
       .from('submissions')
-      .createSignedUrl(`${submission.artist}/${submission.image_id}`, 60)
+      .createSignedUrl(`${artist}/${image_id}`, 60)
 
     if (error || !signedURL) throw error ?? new Error('Something went wrong')
     return signedURL
