@@ -9,10 +9,12 @@ const { publicRuntimeConfig: { supabaseUrl, supabaseAnonKey } } = config()
 
 export class DataClient {
   static useClient (): DataClient {
-    return useMemo(() => {
-      const client = createClient(supabaseUrl, supabaseAnonKey)
-      return new DataClient(client)
-    }, [])
+    return useMemo(() => DataClient.withCredentials(), [])
+  }
+
+  static withCredentials (): DataClient {
+    const client = createClient(supabaseUrl, supabaseAnonKey)
+    return new DataClient(client)
   }
 
   constructor (

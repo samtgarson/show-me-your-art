@@ -1,12 +1,18 @@
+import { AnimateSharedLayout } from "framer-motion"
 import { GetServerSideProps, NextPage } from "next"
-import React, { useCallback, useEffect, useState } from "react"
-import { Map } from "~/src/components/map"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
+import { MapContainer } from "~/src/components/map-container"
 import { NavBar } from "~/src/components/nav-bar"
 import { DataClient } from "~/src/services/data-client"
 import { StateContext } from "~/src/services/state"
 import { Submissions } from "~/types/data"
 
-const Home: NextPage = () => {
+type HomeProps = {
+  page: string
+  path: string[]
+}
+
+const Home: NextPage<HomeProps> = ({ page }) => {
   const [start, setStart] = useState(false)
   const client = DataClient.useClient()
   const [data, setData] = useState<Submissions>({})
@@ -22,20 +28,31 @@ const Home: NextPage = () => {
     setTimeout(() => setStart(true), 0)
   }, [fetchData])
 
+  const Page = useMemo(() => { switch(page) {
+    case 'submit':
+      return () => <h1>Submit</h1>
+  }}, [page])
+
   return <StateContext.Provider value={{ start, data }}>
     <NavBar />
-    <Map />
+    <AnimateSharedLayout type='crossfade'>
+      <MapContainer search={page == 'submit'} />
+      { Page && <Page /> }
+    </AnimateSharedLayout>
   </StateContext.Provider>
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ query }) => {
   if (query.artist !== 'enzo') return { notFound: true }
 
-  const path = (query.path as string[] ?? []).join('/')
-  switch (path) {
+  const pathParam = query.path as string[] ?? []
+  const joined = pathParam.join('/')
+  const [page, ...path] = pathParam
+  switch (joined) {
     case '':
     case 'about':
-      return { props: {} }
+    case 'submit':
+      return { props: { page: page ?? '', path: path ?? [] } }
     default:
       return { notFound: true }
   }

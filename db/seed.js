@@ -13,19 +13,19 @@ require('dotenv').config()
 const supabaseKey = process.env.SUPABASE_ANON_KEY
 const supabaseUrl = process.env.SUPABASE_URL
 const client = createClient(supabaseUrl, supabaseKey)
-const prints = ['mela', 'pera', 'pantera']
 const images = fs.readdirSync(join(__dirname, 'fixture-images/enzo'))
 const sample = arr => arr[Math.floor(Math.random() * arr.length)]
 
-const createSubmission = async (image_id, center, radius, dims, print) => {
+const createSubmission = async (image_id, center, radius, dims) => {
   const { latitude, longitude } = randomLocation.randomCirclePoint(center, radius)
+  const name = sample(['Sam & Gabs', 'Jamin G', 'Laura H.', 'Tom Meyers'])
   const attrs = {
     latitude: `${latitude}`,
     longitude: `${longitude}`,
-    print,
     artist: 'enzo',
     ...dims,
-    image_id
+    image_id,
+    name
   }
 
   return client.rpc('create_submission', attrs)
@@ -35,8 +35,8 @@ const headers = {
   apikey: supabaseKey,
   Authorization: `Bearer ${supabaseKey}`
 }
-const uploadFile = async (id, artist, print) => {
-  const file = sample(images.filter(f => f.startsWith(print)))
+const uploadFile = async (id, artist) => {
+  const file = sample(images)
   const inputPath = join(__dirname, 'fixture-images', artist, file)
   const buffer = fs.readFileSync(inputPath)
   const form = new FormData()
@@ -62,12 +62,11 @@ const seedSubmissions = async (
   for (let i = 0; i < points; i++) {
     try {
       const image_id = uuid() + '.png'
-      const print = sample(prints)
-      const path = await uploadFile(image_id, 'enzo', print)
+      const path = await uploadFile(image_id, 'enzo')
       console.log(`Uploaded ${image_id}`)
 
       const dims = await getDimensions(path)
-      const { data, error } = await createSubmission(image_id, center, radius, dims, print)
+      const { data, error } = await createSubmission(image_id, center, radius, dims)
       if (error || !data) {
         console.error(error)
         break

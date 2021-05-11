@@ -5,13 +5,13 @@ export type Coordinates = {
 
 export type Submission = {
   id: string
-  print: string
   artist: string
   geography: string
   created_at: Date
   image_id: string
   width: number
   height: number
+  name: string
 }
 
 export type SubmissionWithMeta = Submission & {

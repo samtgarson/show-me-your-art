@@ -30,5 +30,6 @@ export const SubmissionPanel: FC<SubmissionPanelProps> = ({ submission }) => {
         className={cn('transition-opacity duration-300 absolute', { 'opacity-0': !loaded })}
       /> }
     </div>
+    <p className="px-5 py-8 flex"><strong className="mr-auto">{ submission.name }</strong><span>Location</span></p>
   </article>
 }

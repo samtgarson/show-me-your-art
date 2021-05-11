@@ -1,5 +1,5 @@
-drop function get_nearby_submissions;
-drop view submissions_with_meta;
+drop function if exists get_nearby_submissions;
+drop view if exists submissions_with_meta;
 
 create or replace view submissions_with_meta as
   select

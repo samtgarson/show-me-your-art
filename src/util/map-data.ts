@@ -1,5 +1,6 @@
 /* eslint-disable promise/prefer-await-to-callbacks */
-import { LayerProps } from "react-map-gl"
+import { Variants } from "framer-motion"
+import { FlyToInterpolator, LayerProps, ViewportProps } from "react-map-gl"
 import { Submissions } from "~/types/data"
 
 export const toGeoJson = (subs: Submissions): GeoJSON.FeatureCollection<GeoJSON.Geometry> => ({
@@ -22,24 +23,7 @@ export const layerStyles: LayerProps[] = [
     source: 'submissions',
     filter: ['!', ['has', 'point_count']],
     paint: {
-      'circle-radius': [
-        'case',
-        ['boolean', ['feature-state', 'selected'], false],
-        // ['interpolate', ['linear'], ['zoom'], [
-        //   0, 6,
-        //   15, 10
-        // ]],
-        20,
-        6
-      ],
-      'circle-color': [
-        'match',
-        ['get', 'print'],
-        'mela', '#CC261E',
-        'pera', '#09833A',
-        'pantera', '#000',
-        '#CC261E' // other
-      ]
+      'circle-radius': 1
     }
   },
   {
@@ -48,38 +32,13 @@ export const layerStyles: LayerProps[] = [
     source: 'submissions',
     filter: ['has', 'point_count'],
     paint: {
-      'circle-radius': {
-        'base': 1.75,
-        'stops': [
-          [0, 10],
-          [15, 20]
-        ]
-      },
-      'circle-color': [
-        'match',
-        ['get', 'print'],
-        'mela', '#CC261E',
-        'pera', '#09833A',
-        'pantera', '#000',
-        '#CC261E' // other
-      ]
-    }
-  },
-  {
-    id: 'point-clustered-labels',
-    type: 'symbol',
-    source: 'submissions',
-    filter: ['has', 'point_count'],
-    layout: {
-      'text-field': '{point_count}',
-      'text-font': [
-        'Open Sans Bold',
-        'Arial Unicode MS Bold'
-      ],
-      'text-size': 14
-    },
-    paint: {
-      'text-color': '#ffffff'
+      'circle-radius': 1
     }
   }
 ]
+
+export const mapTransition = (d = 3000): Partial<ViewportProps> => ({
+  transitionDuration: d,
+  transitionInterpolator: new FlyToInterpolator(),
+  transitionEasing: x => 1 - Math.pow(1 - x, 5)
+})
