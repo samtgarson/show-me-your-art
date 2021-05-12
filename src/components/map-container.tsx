@@ -39,7 +39,7 @@ export const MapContainer: FC<MapContainerProps> = ({ search }) => {
   })
 
   return (
-    <motion.div layoutId="map-wrapper" className={classes}>
+    <motion.div layoutId='map-wrapper' className={classes}>
       <Map {...{ viewport, setViewport, search, artist }} />
     </motion.div>
   )

@@ -41,7 +41,7 @@ const Home: NextPage<HomeProps> = ({ page }) => {
   return (
     <StateContext.Provider value={{ start, data }}>
       <NavBar />
-      <AnimateSharedLayout type="crossfade">
+      <AnimateSharedLayout type='crossfade'>
         <MapContainer search={page == 'submit'} />
         {Page && <Page />}
       </AnimateSharedLayout>

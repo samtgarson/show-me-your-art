@@ -18,13 +18,13 @@ export const SubmissionPanel: FC<SubmissionPanelProps> = ({ submission }) => {
   }, [src])
 
   return (
-    <article key={submission.id} className="p-8 animate-fade-in bg-white">
+    <article key={submission.id} className='p-8 animate-fade-in bg-white'>
       <div
         style={{
           width: `${submission.width}px`,
           height: `${submission.height}px`
         }}
-        className="relative bg-grey"
+        className='relative bg-grey'
       >
         {src && (
           <img
@@ -38,8 +38,8 @@ export const SubmissionPanel: FC<SubmissionPanelProps> = ({ submission }) => {
           />
         )}
       </div>
-      <p className="px-5 py-8 flex">
-        <strong className="mr-auto">{submission.name}</strong>
+      <p className='px-5 py-8 flex'>
+        <strong className='mr-auto'>{submission.name}</strong>
         <span>Location</span>
       </p>
     </article>

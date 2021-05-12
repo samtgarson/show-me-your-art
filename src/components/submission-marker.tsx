@@ -92,13 +92,13 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
       </Marker>
       {sub && hover && !selected && (
         <div
-          className="fixed bg-white p-4 top-0 left-0 z-50"
+          className='fixed bg-white p-4 top-0 left-0 z-50'
           style={{
             transform: `translate(${x + 10}px, ${y + 10}px)`,
             width: 200
           }}
         >
-          <img width="100%" src={submissionImageSrc(sub)} />
+          <img width='100%' src={submissionImageSrc(sub)} />
         </div>
       )}
     </>

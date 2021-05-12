@@ -1,7 +1,9 @@
-import React, { FC } from "react"
+import React, { FC } from 'react'
 
 export const Submit: FC = () => {
-  return <>
-    <h1>Submit</h1>
-  </>
+  return (
+    <>
+      <h1>Submit</h1>
+    </>
+  )
 }

@@ -120,15 +120,15 @@ export const Map: FC<MapProps> = ({
           setViewport(nextViewport)
         }}
         onClick={_ => setSelected(undefined)}
-        width="100%"
-        height="100%"
+        width='100%'
+        height='100%'
       >
         {/* <NavigationControl style={{ top: 30, right: 30 }} showCompass={false} /> */}
         <Source
           cluster={true}
           clusterProperties={{}}
-          id="submissions"
-          type="geojson"
+          id='submissions'
+          type='geojson'
           data={json}
         >
           {layerStyles.map(layerStyle => (
@@ -143,7 +143,7 @@ export const Map: FC<MapProps> = ({
                 longitude={selected.coordinates.longitude}
                 latitude={selected.coordinates.latitude}
                 onClose={setSelected}
-                anchor="left"
+                anchor='left'
                 tipSize={0}
                 className={styles.popup}
                 closeButton={false}
