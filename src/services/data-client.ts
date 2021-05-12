@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { createClient, SupabaseClient } from "@supabase/supabase-js"
-import config from "next/config"
-import { useMemo } from "react"
-import { Coordinates, Submission, SubmissionWithMeta } from "~/types/data"
-import { hydrate } from "../util/hydrate"
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import config from 'next/config'
+import { useMemo } from 'react'
+import { Coordinates, SubmissionWithMeta } from '~/types/data'
+import { hydrate } from '../util/hydrate'
 
-const { publicRuntimeConfig: { supabaseUrl, supabaseAnonKey } } = config()
+const {
+  publicRuntimeConfig: { supabaseUrl, supabaseAnonKey }
+} = config()
 
 export class DataClient {
   static useClient (): DataClient {
@@ -17,9 +19,7 @@ export class DataClient {
     return new DataClient(client)
   }
 
-  constructor (
-    private client: SupabaseClient
-  ) {}
+  constructor (private client: SupabaseClient) {}
 
   async getSubmissions (): Promise<SubmissionWithMeta[]> {
     const { data } = await this.client
@@ -29,16 +29,22 @@ export class DataClient {
     return hydrate(data) || []
   }
 
-  async getNearbySubmissions (coordinates: Coordinates): Promise<SubmissionWithMeta[]> {
-    const { data } = await this.client
-      .rpc<SubmissionWithMeta>('get_nearby_submissions', coordinates)
+  async getNearbySubmissions (
+    coordinates: Coordinates
+  ): Promise<SubmissionWithMeta[]> {
+    const { data } = await this.client.rpc<SubmissionWithMeta>(
+      'get_nearby_submissions',
+      coordinates
+    )
 
     return hydrate(data) || []
   }
 
-  async imageUrl ({ artist, image_id }: Pick<SubmissionWithMeta, 'image_id' | 'artist'>): Promise<string> {
-    const { signedURL, error } = await this.client
-      .storage
+  async imageUrl ({
+    artist,
+    image_id
+  }: Pick<SubmissionWithMeta, 'image_id' | 'artist'>): Promise<string> {
+    const { signedURL, error } = await this.client.storage
       .from('submissions')
       .createSignedUrl(`${artist}/${image_id}`, 60)
 

@@ -1,13 +1,15 @@
 import cn from 'classnames'
 import type { Point } from 'geojson'
-import { MapboxGeoJSONFeature } from "mapbox-gl"
-import React, { FC, useCallback, useContext, useMemo } from "react"
-import { Marker } from "react-map-gl"
-import { SubmissionWithMeta } from "~/types/data"
-import { StateContext } from "../services/state"
+import { MapboxGeoJSONFeature } from 'mapbox-gl'
+import React, { FC, useCallback, useContext, useMemo, useState } from 'react'
+import { Marker } from 'react-map-gl'
+import { SubmissionWithMeta } from '~/types/data'
+import { StateContext } from '../services/state'
+import { debounce } from '../util/debounce'
+import { submissionImageSrc } from './submission-panel'
 
 export type MarkerClickEvent =
-  { cluster: true, clusterId: number, geom: Point }
+  | { cluster: true, clusterId: number, geom: Point }
   | { cluster: false, sub: SubmissionWithMeta }
 type SubmissionMarkerProps = {
   feature: MapboxGeoJSONFeature
@@ -18,40 +20,87 @@ type SubmissionMarkerProps = {
   artist: string
 }
 
-export const SubmissionMarker: FC<SubmissionMarkerProps> = ({ feature, selectedSubmission, geom, id, onClick, artist }) => {
+export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
+  feature,
+  selectedSubmission,
+  geom,
+  id,
+  onClick,
+  artist
+}) => {
   const { data } = useContext(StateContext)
-  const sub = data[feature.properties?.id]
-  const cluster = feature.properties?.cluster
-  const selected = selectedSubmission?.id == id
-  const big = selected || cluster
+  const { sub, cluster, selected, big, content } = useMemo(() => {
+    const sub = data[feature.properties?.id]
+    const cluster = feature.properties?.cluster
+    const selected = selectedSubmission?.id == id
+    const big = selected || cluster
+    const content = cluster ? feature.properties?.point_count : '×'
+    return { sub, cluster, selected, big, content }
+  }, [data, feature, id, selectedSubmission])
 
   const clickHandler = useCallback(() => {
     if (cluster) onClick({ cluster: true, clusterId: parseInt(id, 10), geom })
     else onClick({ cluster: false, sub })
   }, [cluster, geom, id, onClick, sub])
 
-  const classes = useMemo(() => cn(
-    'transition-all flex items-center justify-center text-white cursor-pointer transform hover:scale-110',
-    {
-      '-ml-6 -mt-6 w-12 h-12': big,
-      'w-5 h-5 -ml-2 -mt-2': !big,
-      'font-thin text-3xl': selected,
-      'font-bold text-xl': cluster
-    }
-  ), [big, cluster, selected])
+  const classes = useMemo(
+    () =>
+      cn(
+        'transition-all flex items-center justify-center text-white cursor-pointer transform hover:scale-110',
+        {
+          relative: !big,
+          'font-thin text-3xl': selected,
+          'font-bold text-xl': cluster
+        }
+      ),
+    [big, cluster, selected]
+  )
 
-  const content = useMemo(() => {
-    if (cluster) return feature.properties?.point_count
-    return '×'
-  }, [cluster, feature])
+  const [hover, setHover] = useState(false)
+  const [[x, y], setPosition] = useState<[number, number]>([0, 0])
 
-
-  return <Marker key={id} latitude={geom.coordinates[1]} longitude={geom.coordinates[0]}>
-    <span
-      className={classes}
-      style={{ backgroundColor: `var(--${artist})`, color: !big ? `var(--${artist})` : 'white' }}
-      onClick={clickHandler}
-    >{ content }</span>
-  </Marker>
+  return (
+    <>
+      <Marker
+        key={id}
+        latitude={geom.coordinates[1]}
+        longitude={geom.coordinates[0]}
+        offsetTop={-20}
+        offsetLeft={-20}
+        capturePointerMove={true}
+      >
+        <span
+          onMouseOver={() => setHover(true)}
+          onMouseOut={() => setHover(false)}
+          onMouseMove={debounce(
+            (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+              setPosition([e.clientX, e.clientY])
+            }
+          )}
+          className={classes}
+          style={{
+            backgroundColor: `var(--${artist})`,
+            color: !big ? `var(--${artist})` : 'white',
+            width: big ? 40 : 16,
+            height: big ? 40 : 16,
+            margin: big ? 0 : 12
+          }}
+          onClick={clickHandler}
+        >
+          {content}
+        </span>
+      </Marker>
+      {sub && hover && !selected && (
+        <div
+          className="fixed bg-white p-4 top-0 left-0 z-50"
+          style={{
+            transform: `translate(${x + 10}px, ${y + 10}px)`,
+            width: 200
+          }}
+        >
+          <img width="100%" src={submissionImageSrc(sub)} />
+        </div>
+      )}
+    </>
+  )
 }
-

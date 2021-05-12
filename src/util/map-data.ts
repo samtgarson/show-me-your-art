@@ -1,9 +1,10 @@
 /* eslint-disable promise/prefer-await-to-callbacks */
-import { Variants } from "framer-motion"
-import { FlyToInterpolator, LayerProps, ViewportProps } from "react-map-gl"
-import { Submissions } from "~/types/data"
+import { FlyToInterpolator, LayerProps, ViewportProps } from 'react-map-gl'
+import { Submissions } from '~/types/data'
 
-export const toGeoJson = (subs: Submissions): GeoJSON.FeatureCollection<GeoJSON.Geometry> => ({
+export const toGeoJson = (
+  subs: Submissions
+): GeoJSON.FeatureCollection<GeoJSON.Geometry> => ({
   type: 'FeatureCollection',
   features: Object.values(subs).map(sub => ({
     type: 'Feature',
