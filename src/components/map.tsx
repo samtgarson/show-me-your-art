@@ -1,28 +1,11 @@
-import type { Point } from 'geojson'
-import { GeoJSONSource, Map as IMap } from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import config from 'next/config'
-import React, {
-  FC,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-  useEffect
-} from 'react'
-import ReactMapGL, {
-  Layer,
-  MapRef,
-  Popup,
-  Source,
-  ViewportProps
-} from 'react-map-gl'
-import { SubmissionWithMeta } from '~/types/data'
+import React, { FC, useContext, useMemo } from 'react'
+import ReactMapGL, { Layer, Popup, Source, ViewportProps } from 'react-map-gl'
 import { StateContext } from '../services/state'
 import styles from '../styles/components/map.module.scss'
-import { layerStyles, mapTransition, toGeoJson } from '../util/map-data'
-import { MarkerClickEvent, SubmissionMarker } from './submission-marker'
+import { layerStyles, toGeoJson } from '../util/map-data'
+import { useMarkers } from '../util/use-map-markers'
 import { SubmissionPanel } from './submission-panel'
 
 const {
@@ -44,71 +27,11 @@ export const Map: FC<MapProps> = ({
 }) => {
   const { data } = useContext(StateContext)
   const json = useMemo(() => data && toGeoJson(data), [data])
-  const mapRef = useRef<MapRef>(null)
-  const [markers, setMarkers] = useState<(JSX.Element | undefined)[]>([])
-
-  const [selected, setSelected] = useState<SubmissionWithMeta>()
-
-  const zoomToCluster = useCallback(
-    (id: number, geom: Point) => {
-      if (!mapRef.current) return
-      const map: IMap = mapRef.current.getMap()
-      const source = map.getSource('submissions') as GeoJSONSource
-      // eslint-disable-next-line promise/prefer-await-to-callbacks
-      source.getClusterExpansionZoom(id, (err, zoom) => {
-        if (err || !zoom) return
-        const [lng, lat] = geom.coordinates
-        setViewport({
-          ...viewport,
-          zoom: zoom + 0.5,
-          latitude: lat,
-          longitude: lng,
-          ...mapTransition()
-        })
-      })
-    },
-    [setViewport, viewport]
-  )
-
-  const onClick = useCallback(
-    (evt: MarkerClickEvent) => {
-      if (evt.cluster) zoomToCluster(evt.clusterId, evt.geom)
-      else if (selected?.id === evt.sub.id) setSelected(undefined)
-      else setSelected(evt.sub)
-    },
-    [selected?.id, zoomToCluster]
-  )
-
-  const updateMarkers = useCallback(() => {
-    if (!mapRef.current) return []
-    const map: IMap = mapRef.current.getMap()
-    const bounds = map.getBounds()
-    const dict: Record<string, boolean> = {}
-
-    const markerArray = map.querySourceFeatures('submissions').map(feature => {
-      const geom = feature.geometry as Point
-      const id = feature.properties?.cluster
-        ? feature.id
-        : feature.properties?.id
-      if (dict[id]) return
-      dict[id] = true
-      if (!bounds.contains([geom.coordinates[0], geom.coordinates[1]])) return
-
-      return (
-        <SubmissionMarker
-          {...{ id, feature, geom, onClick, artist }}
-          key={id}
-          selectedSubmission={selected}
-        />
-      )
-    })
-
-    setMarkers(markerArray)
-  }, [artist, onClick, selected])
-
-  useEffect(() => {
-    updateMarkers()
-  }, [updateMarkers, viewport])
+  const { markers, selected, setSelected, mapRef } = useMarkers({
+    viewport,
+    setViewport,
+    artist
+  })
 
   return (
     <>
