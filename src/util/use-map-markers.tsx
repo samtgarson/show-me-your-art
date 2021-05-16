@@ -6,7 +6,7 @@ import { SubmissionWithMeta } from '~/types/entities'
 import {
   MarkerClickEvent,
   SubmissionMarker
-} from '../components/submission-marker'
+} from 'src/components/map/submission-marker'
 import { mapTransition } from './map-data'
 
 type UseMarkersProps = {

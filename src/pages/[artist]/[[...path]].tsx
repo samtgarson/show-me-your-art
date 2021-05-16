@@ -1,7 +1,7 @@
 import { AnimatePresence, AnimateSharedLayout } from 'framer-motion'
 import { GetServerSideProps, NextPage } from 'next'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { MapContainer } from '~/src/components/map-container'
+import { MapContainer } from '~/src/components/map/container'
 import { NavBar } from '~/src/components/nav-bar'
 import { SubmitModal } from '~/src/components/submit/submit-modal'
 import { DataClient } from '~/src/services/data-client'

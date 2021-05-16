@@ -2,8 +2,8 @@ import { motion } from 'framer-motion'
 import { useRouter } from 'next/dist/client/router'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { ViewportProps } from 'react-map-gl'
-import { StateContext } from '../services/state'
-import { mapTransition } from '../util/map-data'
+import { StateContext } from 'src/services/state'
+import { mapTransition } from 'src/util/map-data'
 import { Map } from './map'
 
 const START_COORDS = { latitude: 51.515579, longitude: -0.12836 }

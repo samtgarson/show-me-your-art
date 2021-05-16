@@ -4,9 +4,9 @@ import { MapboxGeoJSONFeature } from 'mapbox-gl'
 import React, { FC, useCallback, useContext, useMemo, useState } from 'react'
 import { Marker } from 'react-map-gl'
 import { SubmissionWithMeta } from '~/types/entities'
-import { StateContext } from '../services/state'
-import { debounce } from '../util/debounce'
-import { submissionImageSrc } from './submission-panel'
+import { StateContext } from 'src/services/state'
+import { debounce } from 'src/util/debounce'
+import { submissionImageSrc } from 'src/components/submission-panel'
 
 export type MarkerClickEvent =
   | { cluster: true, clusterId: number, geom: Point }

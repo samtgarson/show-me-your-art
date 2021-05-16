@@ -3,11 +3,11 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import config from 'next/config'
 import React, { FC, useContext, useMemo } from 'react'
 import ReactMapGL, { Layer, Popup, Source, ViewportProps } from 'react-map-gl'
-import { StateContext } from '../services/state'
-import styles from '../styles/components/map.module.scss'
-import { layerStyles, toGeoJson } from '../util/map-data'
-import { useMarkers } from '../util/use-map-markers'
-import { SubmissionPanel } from './submission-panel'
+import { StateContext } from 'src/services/state'
+import styles from 'src/styles/components/map.module.scss'
+import { layerStyles, toGeoJson } from 'src/util/map-data'
+import { useMarkers } from 'src/util/use-map-markers'
+import { SubmissionPanel } from 'src/components/submission-panel'
 
 const {
   publicRuntimeConfig: { mapboxApiToken }

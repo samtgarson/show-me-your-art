@@ -11,9 +11,15 @@ import {
   LocationSearchResult,
   MapboxClient
 } from '~/src/services/mapbox-client'
-import { Location } from '../location'
 import { Label } from './input'
 import { TextInput } from './text-input'
+
+const Location: FC<{ l: LocationSearchResult }> = ({ l }) => (
+  <>
+    {l.location}
+    <span className='opacity-50'>, {l.area}</span>
+  </>
+)
 
 export const LocationInput: FC<FieldRenderProps<LocationSearchResult>> = ({
   input: { onChange, value, name, onBlur, onFocus },
