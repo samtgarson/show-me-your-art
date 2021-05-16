@@ -83,7 +83,7 @@ export const NavBar: FC = () => {
           layout
           className={cn(
             'bg-white py-3 px-4 sm:py-5 sm:px-6 mr-1 sm:flex items-center flex-grow transition h-full transform',
-            { 'opacity-0 -translate-y-2': hidden }
+            { 'opacity-0 -translate-y-2 pointer-events-none': hidden }
           )}
           transition={{ ease: 'easeOut' }}
         >

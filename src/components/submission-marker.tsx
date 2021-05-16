@@ -1,5 +1,4 @@
 import cn from 'classnames'
-import { motion } from 'framer-motion'
 import type { Point } from 'geojson'
 import { MapboxGeoJSONFeature } from 'mapbox-gl'
 import React, { FC, useCallback, useContext, useMemo, useState } from 'react'
@@ -20,11 +19,7 @@ type SubmissionMarkerProps = {
   id: string
   onClick(evt: MarkerClickEvent): void
   artist: string
-}
-
-const markerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 }
+  hidden?: boolean
 }
 
 export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
@@ -33,7 +28,8 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
   geom,
   id,
   onClick,
-  artist
+  artist,
+  hidden = false
 }) => {
   const { data } = useContext(StateContext)
   const { sub, cluster, selected, big, content } = useMemo(() => {
@@ -53,14 +49,15 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
   const classes = useMemo(
     () =>
       cn(
-        'transition-all flex items-center justify-center text-white cursor-pointer transform hover:scale-110',
+        'transition flex items-center justify-center text-white cursor-pointer transform hover:scale-110 duration-300',
         {
           relative: !big,
           'font-thin text-3xl': selected,
-          'font-bold text-xl': cluster
+          'font-bold text-xl': cluster,
+          'opacity-0 pointer-events-none': hidden
         }
       ),
-    [big, cluster, selected]
+    [big, cluster, hidden, selected]
   )
 
   const [hover, setHover] = useState(false)
@@ -75,13 +72,10 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
         offsetTop={-20}
         offsetLeft={-20}
         capturePointerMove={true}
+        captureDrag={!hidden}
+        captureClick={!hidden}
       >
-        <motion.span
-          variants={markerVariants}
-          initial='hidden'
-          animate='visible'
-          exit='hidden'
-          transition={{ ease: 'easeOut' }}
+        <span
           onMouseOver={() => setHover(true)}
           onMouseOut={() => setHover(false)}
           onMouseMove={debounce(
@@ -100,9 +94,9 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
           onClick={clickHandler}
         >
           {content}
-        </motion.span>
+        </span>
       </Marker>
-      {sub && hover && !selected && (
+      {sub && hover && !selected && !hidden && (
         <div
           className='fixed bg-white p-4 top-0 left-0 z-50'
           style={{

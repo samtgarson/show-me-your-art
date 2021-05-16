@@ -24,7 +24,8 @@ export const layerStyles: LayerProps[] = [
     source: 'submissions',
     filter: ['!', ['has', 'point_count']],
     paint: {
-      'circle-radius': 1
+      'circle-radius': 1,
+      'circle-opacity': 0
     }
   },
   {
@@ -33,7 +34,8 @@ export const layerStyles: LayerProps[] = [
     source: 'submissions',
     filter: ['has', 'point_count'],
     paint: {
-      'circle-radius': 1
+      'circle-radius': 1,
+      'circle-opacity': 0
     }
   }
 ]

@@ -13,6 +13,7 @@ type UseMarkersProps = {
   viewport: ViewportProps
   setViewport(viewport: ViewportProps): void
   artist: string
+  hidden: boolean
 }
 
 // TODO: Refactor this file
@@ -20,7 +21,8 @@ type UseMarkersProps = {
 export const useMarkers = ({
   viewport,
   setViewport,
-  artist
+  artist,
+  hidden
 }: UseMarkersProps) => {
   const mapRef = useRef<MapRef>(null)
   const [markers, setMarkers] = useState<(JSX.Element | undefined)[]>([])
@@ -76,12 +78,13 @@ export const useMarkers = ({
           {...{ id, feature, geom, onClick, artist }}
           key={id}
           selectedSubmission={selected}
+          hidden={hidden}
         />
       )
     })
 
     setMarkers(markerArray)
-  }, [artist, onClick, selected])
+  }, [artist, onClick, hidden, selected])
 
   useEffect(() => {
     updateMarkers()

@@ -1,4 +1,4 @@
-import { AnimatePresence } from 'framer-motion'
+import cn from 'classnames'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import config from 'next/config'
 import React, { FC, useContext, useMemo } from 'react'
@@ -31,7 +31,8 @@ export const Map: FC<MapProps> = ({
   const { markers, selected, setSelected, mapRef } = useMarkers({
     viewport,
     setViewport,
-    artist
+    artist,
+    hidden: search
   })
 
   return (
@@ -41,11 +42,12 @@ export const Map: FC<MapProps> = ({
         ref={mapRef}
         mapboxApiAccessToken={mapboxApiToken}
         onViewportChange={(nextViewport: ViewportProps) => {
-          setViewport(nextViewport)
+          search || setViewport(nextViewport)
         }}
         onClick={_ => setSelected(undefined)}
         width='100%'
         height='100%'
+        className={cn({ 'cursor-default pointer-events-none': search })}
       >
         {/* <NavigationControl style={{ top: 30, right: 30 }} showCompass={false} /> */}
         <Source
@@ -55,31 +57,27 @@ export const Map: FC<MapProps> = ({
           type='geojson'
           data={json}
         >
-          {search ||
-            layerStyles.map(layerStyle => (
-              <Layer key={layerStyle.id} {...layerStyle} />
-            ))}
+          {layerStyles.map(layerStyle => (
+            <Layer key={layerStyle.id} {...layerStyle} />
+          ))}
         </Source>
-        <AnimatePresence>
-          {search || (
-            <>
-              {markers}
-              {selected && (
-                <Popup
-                  longitude={selected.coordinates.longitude}
-                  latitude={selected.coordinates.latitude}
-                  onClose={setSelected}
-                  anchor='left'
-                  tipSize={0}
-                  className={styles.popup}
-                  closeButton={false}
-                >
-                  <SubmissionPanel submission={selected} />
-                </Popup>
-              )}
-            </>
+
+        <>
+          {markers}
+          {selected && (
+            <Popup
+              longitude={selected.coordinates.longitude}
+              latitude={selected.coordinates.latitude}
+              onClose={setSelected}
+              anchor='left'
+              tipSize={0}
+              className={styles.popup}
+              closeButton={false}
+            >
+              <SubmissionPanel submission={selected} />
+            </Popup>
           )}
-        </AnimatePresence>
+        </>
       </ReactMapGL>
     </>
   )
