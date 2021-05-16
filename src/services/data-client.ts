@@ -26,10 +26,11 @@ export class DataClient {
 
   constructor (private client: SupabaseClient) {}
 
-  async getSubmissions (): Promise<SubmissionWithMeta[]> {
+  async getSubmissions (artist: string): Promise<SubmissionWithMeta[]> {
     const { data } = await this.client
       .from<SubmissionWithMeta>('submissions_with_meta')
       .select('*')
+      .eq('artist', artist)
 
     return hydrate(data) || []
   }

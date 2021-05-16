@@ -49,7 +49,7 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
   const classes = useMemo(
     () =>
       cn(
-        'transition flex items-center justify-center text-white cursor-pointer transform hover:scale-110 duration-300',
+        'transition-all flex items-center justify-center text-white cursor-pointer transform hover:scale-110 duration-300',
         {
           relative: !big,
           'font-thin text-3xl': selected,

@@ -47,8 +47,9 @@ const NavItem: FC<{ href: string }> = ({ href, children }) => (
 
 const NavItems: FC<{ mobile?: boolean }> = ({ mobile = false }) => {
   const {
-    query: { artist }
+    query: { artist, path }
   } = useRouter()
+  const [route] = (path as string[] | undefined) ?? []
 
   return (
     <motion.ul
@@ -61,7 +62,11 @@ const NavItems: FC<{ mobile?: boolean }> = ({ mobile = false }) => {
       animate='animate'
       exit='initial'
     >
-      <NavItem href='#'>View gallery</NavItem>
+      {route == 'gallery' ? (
+        <NavItem href={`/${artist}`}>View map</NavItem>
+      ) : (
+        <NavItem href={`/${artist}/gallery`}>View gallery</NavItem>
+      )}
       <NavItem href={`/${artist}/about`}>About</NavItem>
     </motion.ul>
   )

@@ -74,7 +74,11 @@ export const Map: FC<MapProps> = ({
               className={styles.popup}
               closeButton={false}
             >
-              <SubmissionPanel submission={selected} />
+              <SubmissionPanel
+                submission={selected}
+                className='p-8'
+                style={{ width: '65vh' }}
+              />
             </Popup>
           )}
         </>

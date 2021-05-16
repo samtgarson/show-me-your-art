@@ -2,6 +2,7 @@ import { AnimatePresence, AnimateSharedLayout } from 'framer-motion'
 import { GetServerSideProps, NextPage } from 'next'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { AboutModal } from '~/src/components/about-modal'
+import { Gallery } from '~/src/components/gallery'
 import { MapContainer } from '~/src/components/map/container'
 import { NavBar } from '~/src/components/nav-bar'
 import { SubmitModal } from '~/src/components/submit/submit-modal'
@@ -21,13 +22,13 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
   const [data, setData] = useState<Submissions>({})
 
   const fetchData = useCallback(async () => {
-    const submissions = await client.getSubmissions()
+    const submissions = await client.getSubmissions(artist)
     const newData = submissions.reduce(
       (hsh, sub) => ({ ...hsh, [sub.id]: sub }),
       {}
     )
     setData((d: Submissions) => ({ ...d, ...newData }))
-  }, [client])
+  }, [artist, client])
 
   useEffect(() => {
     fetchData()
@@ -40,6 +41,8 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
         return SubmitModal
       case 'about':
         return AboutModal
+      case 'gallery':
+        return Gallery
     }
   }, [page])
 
@@ -66,6 +69,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
     case '':
     case 'about':
     case 'submit':
+    case 'gallery':
       return {
         props: { page: page ?? '', path: path ?? [], artist: query.artist }
       }
