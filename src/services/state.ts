@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { Submissions } from '~/types/data'
+import { Submissions } from '~/types/entities'
 
 type State = {
   start: boolean

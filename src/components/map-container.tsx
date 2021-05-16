@@ -1,4 +1,3 @@
-import cn from 'classnames'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/dist/client/router'
 import React, { FC, useContext, useEffect, useState } from 'react'
@@ -33,13 +32,11 @@ export const MapContainer: FC<MapContainerProps> = ({ search }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [start])
 
-  const classes = cn({
-    'absolute h-screen w-screen left-0 top-0': !search,
-    'block h-64 w-96': search
-  })
-
   return (
-    <motion.div layoutId='map-wrapper' className={classes}>
+    <motion.div
+      layoutId='map-wrapper'
+      className='absolute h-screen w-screen left-0 top-0'
+    >
       <Map {...{ viewport, setViewport, search, artist }} />
     </motion.div>
   )

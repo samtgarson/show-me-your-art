@@ -1,6 +1,6 @@
 import cn from 'classnames'
 import React, { FC, useEffect, useMemo, useState } from 'react'
-import { SubmissionWithMeta } from '~/types/data'
+import { SubmissionWithMeta } from '~/types/entities'
 
 type SubmissionPanelProps = {
   submission: SubmissionWithMeta
@@ -40,7 +40,7 @@ export const SubmissionPanel: FC<SubmissionPanelProps> = ({ submission }) => {
       </div>
       <p className='px-5 py-8 flex'>
         <strong className='mr-auto'>{submission.name}</strong>
-        <span>Location</span>
+        <span>{submission.location}</span>
       </p>
     </article>
   )

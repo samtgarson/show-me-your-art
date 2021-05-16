@@ -2,8 +2,13 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import config from 'next/config'
 import { useMemo } from 'react'
-import { Coordinates, SubmissionWithMeta } from '~/types/data'
+import {
+  Coordinates,
+  SubmissionAttrs,
+  SubmissionWithMeta
+} from '~/types/entities'
 import { hydrate } from '../util/hydrate'
+import { v4 as uuid } from 'uuid'
 
 const {
   publicRuntimeConfig: { supabaseUrl, supabaseAnonKey }
@@ -50,5 +55,34 @@ export class DataClient {
 
     if (error || !signedURL) throw error ?? new Error('Something went wrong')
     return signedURL
+  }
+
+  async uploadImage (artist: string, file: File): Promise<string> {
+    const extension = this.extensionFor(file.type)
+    const id = `${uuid()}.${extension}`
+    const path = `${artist}/${id}`
+    const { error } = await this.client.storage
+      .from('submissions')
+      .upload(path, file, { cacheControl: 'public, max-age=604800, immutable' })
+
+    if (error) throw error
+    return id
+  }
+
+  async createSubmission (attrs: SubmissionAttrs): Promise<void> {
+    const { error } = await this.client.rpc('create_submission', attrs)
+
+    if (error) throw error
+  }
+
+  private extensionFor (type: string) {
+    switch (type) {
+      case 'image/png':
+        return 'png'
+      case 'image/jpeg':
+        return 'jpeg'
+      default:
+        throw new Error('Unsupported file type')
+    }
   }
 }

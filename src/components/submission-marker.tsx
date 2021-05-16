@@ -1,9 +1,10 @@
 import cn from 'classnames'
+import { motion } from 'framer-motion'
 import type { Point } from 'geojson'
 import { MapboxGeoJSONFeature } from 'mapbox-gl'
 import React, { FC, useCallback, useContext, useMemo, useState } from 'react'
 import { Marker } from 'react-map-gl'
-import { SubmissionWithMeta } from '~/types/data'
+import { SubmissionWithMeta } from '~/types/entities'
 import { StateContext } from '../services/state'
 import { debounce } from '../util/debounce'
 import { submissionImageSrc } from './submission-panel'
@@ -11,6 +12,7 @@ import { submissionImageSrc } from './submission-panel'
 export type MarkerClickEvent =
   | { cluster: true, clusterId: number, geom: Point }
   | { cluster: false, sub: SubmissionWithMeta }
+
 type SubmissionMarkerProps = {
   feature: MapboxGeoJSONFeature
   selectedSubmission?: SubmissionWithMeta
@@ -18,6 +20,11 @@ type SubmissionMarkerProps = {
   id: string
   onClick(evt: MarkerClickEvent): void
   artist: string
+}
+
+const markerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 }
 }
 
 export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
@@ -69,7 +76,12 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
         offsetLeft={-20}
         capturePointerMove={true}
       >
-        <span
+        <motion.span
+          variants={markerVariants}
+          initial='hidden'
+          animate='visible'
+          exit='hidden'
+          transition={{ ease: 'easeOut' }}
           onMouseOver={() => setHover(true)}
           onMouseOut={() => setHover(false)}
           onMouseMove={debounce(
@@ -88,7 +100,7 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
           onClick={clickHandler}
         >
           {content}
-        </span>
+        </motion.span>
       </Marker>
       {sub && hover && !selected && (
         <div

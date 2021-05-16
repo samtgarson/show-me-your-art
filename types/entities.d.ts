@@ -12,10 +12,19 @@ export type Submission = {
   width: number
   height: number
   name: string
+  location: string
 }
 
 export type SubmissionWithMeta = Submission & {
   coordinates: Coordinates
+}
+
+export type SubmissionAttrs = Omit<
+  Submission,
+  'geography' | 'created_at' | 'id'
+> & {
+  longitude: number
+  latitude: number
 }
 
 export type Submissions = Record<string, SubmissionWithMeta>

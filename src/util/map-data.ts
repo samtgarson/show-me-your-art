@@ -1,6 +1,6 @@
 /* eslint-disable promise/prefer-await-to-callbacks */
 import { FlyToInterpolator, LayerProps, ViewportProps } from 'react-map-gl'
-import { Submissions } from '~/types/data'
+import { Submissions } from '~/types/entities'
 
 export const toGeoJson = (
   subs: Submissions

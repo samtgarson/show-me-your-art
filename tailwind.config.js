@@ -1,14 +1,19 @@
+const plugin = require('tailwindcss/plugin')
+
 module.exports = {
-  purge: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
+  purge: [
+    './src/pages/**/*.{js,ts,jsx,tsx}',
+    './src/components/**/*.{js,ts,jsx,tsx}'
+  ],
   darkMode: false,
   theme: {
-    colors: {
-      current: 'currentColor',
-      transparent: 'transparent',
-      white: 'white',
-      grey: 'var(--grey)',
-    },
     extend: {
+      colors: {
+        current: 'currentColor',
+        transparent: 'transparent',
+        white: 'white',
+        grey: 'var(--grey)'
+      },
       keyframes: {
         'fade-in': {
           '0%': {
@@ -18,7 +23,7 @@ module.exports = {
           '100%': {
             opacity: '1',
             transform: 'translateY(0)'
-          },
+          }
         }
       },
       animation: {

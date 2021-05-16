@@ -1,18 +1,20 @@
-import { AnimateSharedLayout } from 'framer-motion'
+import { AnimatePresence, AnimateSharedLayout } from 'framer-motion'
 import { GetServerSideProps, NextPage } from 'next'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { MapContainer } from '~/src/components/map-container'
 import { NavBar } from '~/src/components/nav-bar'
+import { SubmitModal } from '~/src/components/submit/submit-modal'
 import { DataClient } from '~/src/services/data-client'
 import { StateContext } from '~/src/services/state'
-import { Submissions } from '~/types/data'
+import { Submissions } from '~/types/entities'
 
 type HomeProps = {
   page: string
   path: string[]
+  artist: string
 }
 
-const Home: NextPage<HomeProps> = ({ page }) => {
+const Home: NextPage<HomeProps> = ({ page, artist }) => {
   const [start, setStart] = useState(false)
   const client = DataClient.useClient()
   const [data, setData] = useState<Submissions>({})
@@ -23,7 +25,7 @@ const Home: NextPage<HomeProps> = ({ page }) => {
       (hsh, sub) => ({ ...hsh, [sub.id]: sub }),
       {}
     )
-    setData(d => ({ ...d, ...newData }))
+    setData((d: Submissions) => ({ ...d, ...newData }))
   }, [client])
 
   useEffect(() => {
@@ -34,7 +36,7 @@ const Home: NextPage<HomeProps> = ({ page }) => {
   const Page = useMemo(() => {
     switch (page) {
       case 'submit':
-        return () => null
+        return SubmitModal
     }
   }, [page])
 
@@ -43,7 +45,7 @@ const Home: NextPage<HomeProps> = ({ page }) => {
       <NavBar />
       <AnimateSharedLayout type='crossfade'>
         <MapContainer search={page == 'submit'} />
-        {Page && <Page />}
+        <AnimatePresence>{Page && <Page artist={artist} />}</AnimatePresence>
       </AnimateSharedLayout>
     </StateContext.Provider>
   )
@@ -61,7 +63,9 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
     case '':
     case 'about':
     case 'submit':
-      return { props: { page: page ?? '', path: path ?? [] } }
+      return {
+        props: { page: page ?? '', path: path ?? [], artist: query.artist }
+      }
     default:
       return { notFound: true }
   }

@@ -9,15 +9,18 @@
 @tailwind utilities;
 
 @layer base {
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
   html,
   body {
     @apply antialiased;
     padding: 0;
     margin: 0;
-    font-family: 'SF Mono', SFMono-Regular, ui-monospace, 'DejaVu Sans Mono', Menlo, Consolas, monospace;
+    font-family: 'Space Mono', 'SF Mono', SFMono-Regular, ui-monospace, 'DejaVu Sans Mono', Menlo, Consolas, monospace;
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    line-height: 150%;
     font-weight: 400;
   }
 
@@ -39,5 +42,11 @@
       opacity:1;
       transform: translateY(0);
     }
+  }
+}
+
+@layer utilities {
+  .border-l-white {
+    border-left-color: white;
   }
 }

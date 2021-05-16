@@ -5,7 +5,8 @@ create or replace view submissions_with_meta as
   select
     *,
     json_build_object('latitude', ST_Y(geography::geometry), 'longitude', ST_X(geography::geometry)) as coordinates
-  from submissions;
+  from submissions
+  where state = 'approved';
 
 create or replace function get_nearby_submissions (
   longitude text,

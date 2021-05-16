@@ -2,7 +2,7 @@ import { GeoJSONSource, Map } from 'mapbox-gl'
 import type { Point } from 'geojson'
 import React, { useCallback, useRef, useState, useEffect } from 'react'
 import { MapRef, ViewportProps } from 'react-map-gl'
-import { SubmissionWithMeta } from '~/types/data'
+import { SubmissionWithMeta } from '~/types/entities'
 import {
   MarkerClickEvent,
   SubmissionMarker

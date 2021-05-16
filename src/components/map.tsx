@@ -1,3 +1,4 @@
+import { AnimatePresence } from 'framer-motion'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import config from 'next/config'
 import React, { FC, useContext, useMemo } from 'react'
@@ -54,28 +55,31 @@ export const Map: FC<MapProps> = ({
           type='geojson'
           data={json}
         >
-          {layerStyles.map(layerStyle => (
-            <Layer key={layerStyle.id} {...layerStyle} />
-          ))}
+          {search ||
+            layerStyles.map(layerStyle => (
+              <Layer key={layerStyle.id} {...layerStyle} />
+            ))}
         </Source>
-        {search || (
-          <>
-            {markers}
-            {selected && (
-              <Popup
-                longitude={selected.coordinates.longitude}
-                latitude={selected.coordinates.latitude}
-                onClose={setSelected}
-                anchor='left'
-                tipSize={0}
-                className={styles.popup}
-                closeButton={false}
-              >
-                <SubmissionPanel submission={selected} />
-              </Popup>
-            )}
-          </>
-        )}
+        <AnimatePresence>
+          {search || (
+            <>
+              {markers}
+              {selected && (
+                <Popup
+                  longitude={selected.coordinates.longitude}
+                  latitude={selected.coordinates.latitude}
+                  onClose={setSelected}
+                  anchor='left'
+                  tipSize={0}
+                  className={styles.popup}
+                  closeButton={false}
+                >
+                  <SubmissionPanel submission={selected} />
+                </Popup>
+              )}
+            </>
+          )}
+        </AnimatePresence>
       </ReactMapGL>
     </>
   )

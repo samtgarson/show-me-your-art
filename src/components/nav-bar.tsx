@@ -30,6 +30,10 @@ const navVariants = {
   item: {
     initial: { opacity: 0, y: -5, transition: { ease: 'easeOut' } },
     animate: { opacity: 1, y: 0 }
+  },
+  close: {
+    initial: { opacity: 0, y: -5, transition: { ease: 'easeOut' } },
+    animate: { opacity: 1, y: 0 }
   }
 }
 
@@ -45,6 +49,7 @@ const NavItems: FC<{ mobile?: boolean }> = ({ mobile = false }) => {
   const {
     query: { artist }
   } = useRouter()
+
   return (
     <motion.ul
       className={cn('list-none mt-5 sm:mt-0', {
@@ -65,17 +70,24 @@ const NavItems: FC<{ mobile?: boolean }> = ({ mobile = false }) => {
 export const NavBar: FC = () => {
   const [open, setOpen] = useState(false)
   const {
-    query: { artist }
+    query: { artist, path }
   } = useRouter()
+  const [route] = (path as string[] | undefined) ?? []
+
+  const hidden = ['about', 'submit'].includes(route)
 
   return (
-    <nav className='fixed sm:top-10 sm:left-10 sm:right-10 top-2 left-2 right-2 z-40 font-bold flex items-start'>
+    <nav className='fixed sm:top-10 sm:left-10 sm:right-10 top-2 left-2 right-2 z-40 font-bold flex items-start h-16'>
       <AnimateSharedLayout type='crossfade'>
         <motion.section
           layout
-          className='bg-white py-3 px-4 sm:py-5 sm:px-6 mr-1 sm:flex flex-grow'
+          className={cn(
+            'bg-white py-3 px-4 sm:py-5 sm:px-6 mr-1 sm:flex items-center flex-grow transition h-full transform',
+            { 'opacity-0 -translate-y-2': hidden }
+          )}
+          transition={{ ease: 'easeOut' }}
         >
-          <div className='flex sm:mr-auto'>
+          <div className='flex sm:mr-auto transition'>
             <motion.h1 layoutId='nav-title' className='mr-auto'>
               <Link href={`/${artist}`}>
                 <a>Show me your Enzo</a>
@@ -91,9 +103,11 @@ export const NavBar: FC = () => {
           <AnimatePresence>{open && <NavItems mobile />}</AnimatePresence>
         </motion.section>
       </AnimateSharedLayout>
-      <Link href={`/${artist}/submit`}>
-        <a className='bg-white py-3 px-4 sm:py-5 sm:px-6'>Submit</a>
-      </Link>
+      <div className='bg-white py-3 px-4 sm:py-5 sm:px-6 relative overflow-hidden h-full w-28 text-center'>
+        <Link href={hidden ? `/${artist}` : `/${artist}/submit`} passHref>
+          <a>{hidden ? 'Close' : 'Submit'}</a>
+        </Link>
+      </div>
     </nav>
   )
 }
