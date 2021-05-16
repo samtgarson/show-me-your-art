@@ -1,6 +1,7 @@
 import { AnimatePresence, AnimateSharedLayout } from 'framer-motion'
 import { GetServerSideProps, NextPage } from 'next'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { AboutModal } from '~/src/components/about-modal'
 import { MapContainer } from '~/src/components/map/container'
 import { NavBar } from '~/src/components/nav-bar'
 import { SubmitModal } from '~/src/components/submit/submit-modal'
@@ -37,6 +38,8 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
     switch (page) {
       case 'submit':
         return SubmitModal
+      case 'about':
+        return AboutModal
     }
   }, [page])
 

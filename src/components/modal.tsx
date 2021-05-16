@@ -19,7 +19,8 @@ export const Modal: FC = ({ children }) => (
     initial='hidden'
     animate='visible'
     exit='hidden'
-    className='fixed left-2 sm:left-auto top-16 bottom-2 sm:bottom-auto overflow-auto sm:overflow-hidden sm:top-28 bg-black p-10 text-white normal-case tracking-normal sm:max-w-xl sm:w-full right-2 sm:right-10 origin-top-right'
+    className='fixed left-2 sm:left-auto top-16 bottom-2 sm:bottom-auto overflow-auto sm:top-28 bg-black p-10 text-white normal-case tracking-normal sm:max-w-xl sm:w-full right-2 sm:right-10 origin-top-right flex flex-col justify-start items-start'
+    style={{ minHeight: '50vh', maxHeight: '80vh', height: 600 }}
   >
     {children}
   </motion.div>

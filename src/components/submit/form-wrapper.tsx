@@ -80,7 +80,7 @@ export const SubmitForm: FC<SubmitFormProps> = ({ artist, done }) => {
           variants={modalVariants.wrapper}
           transition={{ ease: 'easeOut' }}
           onSubmit={handleSubmit}
-          className='flex flex-col h-full'
+          className='flex flex-col'
         >
           <h2 className='font-bold mb-6 text-xl'>Submit your {artist}</h2>
           <p className='mb-8'>
