@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import config from 'next/config'
 import { useRouter } from 'next/dist/client/router'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { ViewportProps } from 'react-map-gl'
@@ -12,6 +13,10 @@ type MapContainerProps = {
   search: boolean
 }
 
+const {
+  publicRuntimeConfig: { mapboxApiToken }
+} = config()
+
 export const MapContainer: FC<MapContainerProps> = ({ search }) => {
   const { start } = useContext(StateContext)
   const { query } = useRouter()
@@ -20,16 +25,25 @@ export const MapContainer: FC<MapContainerProps> = ({ search }) => {
     ...START_COORDS,
     zoom: 8
   })
+  const {
+    query: { path = [] },
+    push
+  } = useRouter()
+  const [route, param] = path as string[]
+  const selectedId = route === 'submission' ? param : undefined
+  const setSelected = (id?: string) => {
+    if (!id) push(`/${artist}`)
+    else push(`/${artist}/submission/${id}`)
+  }
 
   useEffect(() => {
     if (start)
-      setViewport({
-        ...viewport,
+      setViewport(vp => ({
+        ...vp,
         zoom: 10,
         pitch: 30,
         ...mapTransition(5000)
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      }))
   }, [start])
 
   return (
@@ -37,7 +51,17 @@ export const MapContainer: FC<MapContainerProps> = ({ search }) => {
       layoutId='map-wrapper'
       className='absolute h-screen w-screen left-0 top-0'
     >
-      <Map {...{ viewport, setViewport, search, artist }} />
+      <Map
+        {...{
+          viewport,
+          setViewport,
+          search,
+          artist,
+          selectedId,
+          setSelected,
+          token: mapboxApiToken
+        }}
+      />
     </motion.div>
   )
 }

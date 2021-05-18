@@ -1,15 +1,15 @@
 .popup {
   @apply bg-transparent;
 
-  @media (max-width: 768px) {
-    @apply top-20 left-2 right-2;
-    position: fixed !important;
-    transform: none !important;
+  // @media (max-width: 768px) {
+  //   @apply top-20 left-2 right-2;
+  //   position: fixed !important;
+  //   transform: none !important;
 
-    :global .mapboxgl-popup-content {
-      width: 100%;
-    }
-  }
+  //   :global .mapboxgl-popup-content {
+  //     width: 100%;
+  //   }
+  // }
 
   @screen md {
     @apply p-10;
@@ -19,5 +19,6 @@
     box-shadow: none;
     padding: none;
     background: none;
+    padding: 0;
   }
 }

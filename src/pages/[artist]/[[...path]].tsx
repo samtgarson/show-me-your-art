@@ -8,6 +8,7 @@ import { NavBar } from '~/src/components/nav-bar'
 import { SubmitModal } from '~/src/components/submit/submit-modal'
 import { DataClient } from '~/src/services/data-client'
 import { StateContext } from '~/src/services/state'
+import { matcher } from '~/src/util/route-matcher'
 import { Submissions } from '~/types/entities'
 
 type HomeProps = {
@@ -57,24 +58,21 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
   )
 }
 
+const routes = ['', 'about', 'submit', 'gallery', 'submission/*']
+const match = matcher(routes)
+
 export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
   query
 }) => {
   if (query.artist !== 'enzo') return { notFound: true }
 
   const pathParam = (query.path as string[]) ?? []
-  const joined = pathParam.join('/')
-  const [page, ...path] = pathParam
-  switch (joined) {
-    case '':
-    case 'about':
-    case 'submit':
-    case 'gallery':
-      return {
-        props: { page: page ?? '', path: path ?? [], artist: query.artist }
-      }
-    default:
-      return { notFound: true }
+  const [page = '', ...path] = pathParam
+  const route = pathParam.join('/')
+  if (!match(route)) return { notFound: true }
+
+  return {
+    props: { page, path, artist: query.artist }
   }
 }
 

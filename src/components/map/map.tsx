@@ -1,46 +1,77 @@
 import cn from 'classnames'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import config from 'next/config'
-import React, { FC, useContext, useMemo } from 'react'
-import ReactMapGL, { Layer, Popup, Source, ViewportProps } from 'react-map-gl'
+import React, { FC, useContext, useEffect, useMemo, useRef } from 'react'
+import ReactMapGL, {
+  Layer,
+  MapRef,
+  Popup,
+  Source,
+  ViewportProps
+} from 'react-map-gl'
+import { SubmissionPanel } from 'src/components/submission-panel'
 import { StateContext } from 'src/services/state'
 import styles from 'src/styles/components/map.module.scss'
-import { layerStyles, toGeoJson } from 'src/util/map-data'
+import {
+  getPopupLocation,
+  layerStyles,
+  mapTransition,
+  toGeoJson
+} from 'src/util/map-data'
 import { useMarkers } from 'src/util/use-map-markers'
-import { SubmissionPanel } from 'src/components/submission-panel'
-
-const {
-  publicRuntimeConfig: { mapboxApiToken }
-} = config()
 
 type MapProps = {
   viewport: ViewportProps
-  setViewport(viewport: ViewportProps): void
+  setViewport(
+    viewport: ViewportProps | ((viewport: ViewportProps) => ViewportProps)
+  ): void
   search: boolean
   artist: string
+  selectedId?: string
+  setSelected(id?: string): void
+  token: string
 }
 
 export const Map: FC<MapProps> = ({
   viewport,
   setViewport,
   search,
-  artist
+  artist,
+  selectedId,
+  setSelected,
+  token
 }) => {
   const { data } = useContext(StateContext)
   const json = useMemo(() => data && toGeoJson(data), [data])
-  const { markers, selected, setSelected, mapRef } = useMarkers({
+  const mapRef = useRef<MapRef>(null)
+  const popupRef = useRef<HTMLDivElement>(null)
+  const selected = useMemo(
+    () => (selectedId ? data[selectedId] : undefined),
+    [data, selectedId]
+  )
+  const { markers } = useMarkers({
     viewport,
     setViewport,
     artist,
-    hidden: search
+    hidden: search,
+    selected,
+    setSelected,
+    mapRef: mapRef.current
   })
+
+  useEffect(() => {
+    setViewport(vp => ({
+      ...vp,
+      ...getPopupLocation(mapRef, selected, popupRef),
+      ...mapTransition(2000)
+    }))
+  }, [selected, setViewport])
 
   return (
     <>
       <ReactMapGL
         {...viewport}
         ref={mapRef}
-        mapboxApiAccessToken={mapboxApiToken}
+        mapboxApiAccessToken={token}
         onViewportChange={(nextViewport: ViewportProps) => {
           search || setViewport(nextViewport)
         }}
@@ -75,9 +106,10 @@ export const Map: FC<MapProps> = ({
               closeButton={false}
             >
               <SubmissionPanel
+                ref={popupRef}
                 submission={selected}
-                className='p-8'
-                style={{ width: '65vh' }}
+                className='p-4 sm:p-6 max-w-full min-w-full sm:min-w-0'
+                style={{ width: '50vh' }}
               />
             </Popup>
           )}

@@ -1,6 +1,13 @@
 /* eslint-disable promise/prefer-await-to-callbacks */
-import { FlyToInterpolator, LayerProps, ViewportProps } from 'react-map-gl'
-import { Submissions } from '~/types/entities'
+import { Map } from 'mapbox-gl'
+import { RefObject } from 'react'
+import {
+  FlyToInterpolator,
+  LayerProps,
+  MapRef,
+  ViewportProps
+} from 'react-map-gl'
+import { Coordinates, Submissions, SubmissionWithMeta } from '~/types/entities'
 
 export const toGeoJson = (
   subs: Submissions
@@ -45,3 +52,23 @@ export const mapTransition = (d = 3000): Partial<ViewportProps> => ({
   transitionInterpolator: new FlyToInterpolator(),
   transitionEasing: x => 1 - Math.pow(1 - x, 5)
 })
+
+export const getPopupLocation = (
+  mapRef: RefObject<MapRef>,
+  selected: SubmissionWithMeta | undefined,
+  popupRef: RefObject<HTMLDivElement>
+): Coordinates | void => {
+  if (!selected || !mapRef.current) return
+  const map: Map = mapRef.current.getMap()
+  const point = map.project([
+    selected.coordinates.longitude,
+    selected.coordinates.latitude
+  ])
+  const { lng: centerLng } = map.getCenter()
+  const { current: popup } = popupRef
+  const leftOrRight = centerLng < selected.coordinates.longitude ? -1 : 1
+  const offset = popup ? popup.offsetWidth / 2 : window.innerWidth / 4
+  point.x += offset * leftOrRight
+  const { lng: longitude, lat: latitude } = map.unproject(point)
+  return { longitude, latitude }
+}
