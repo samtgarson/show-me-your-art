@@ -13,6 +13,7 @@ export type Submission = {
   height: number
   name: string
   location: string
+  state: 'pending' | 'approved'
 }
 
 export type SubmissionWithMeta = Submission & {

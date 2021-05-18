@@ -26,6 +26,16 @@ export class DataClient {
 
   constructor (private client: SupabaseClient) {}
 
+  async getSubmission (id: string): Promise<SubmissionWithMeta | void> {
+    const { data } = await this.client
+      .from<SubmissionWithMeta>('submissions_with_meta')
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    if (data) return hydrate(data)
+  }
+
   async getSubmissions (artist: string): Promise<SubmissionWithMeta[]> {
     const { data } = await this.client
       .from<SubmissionWithMeta>('submissions_with_meta')
@@ -72,6 +82,15 @@ export class DataClient {
 
   async createSubmission (attrs: SubmissionAttrs): Promise<void> {
     const { error } = await this.client.rpc('create_submission', attrs)
+
+    if (error) throw error
+  }
+
+  async approveSubmission (id: string): Promise<void> {
+    const { error } = this.client
+      .from<SubmissionWithMeta>('submissions_with_meta')
+      .update({ state: 'approved' }, { returning: 'minimal' })
+      .eq('id', id)
 
     if (error) throw error
   }
