@@ -69,24 +69,26 @@ export const useMarkers = ({
     const bounds = map.getBounds()
     const dict: Record<string, boolean> = {}
 
-    const markerArray = map.querySourceFeatures('submissions').map(feature => {
-      const geom = feature.geometry as Point
-      const id = feature.properties?.cluster
-        ? feature.id
-        : feature.properties?.id
-      if (dict[id]) return
-      dict[id] = true
-      if (!bounds.contains([geom.coordinates[0], geom.coordinates[1]])) return
+    const markerArray = map
+      .querySourceFeatures('submissions')
+      .map((feature, i) => {
+        const geom = feature.geometry as Point
+        const id = feature.properties?.cluster
+          ? feature.id
+          : feature.properties?.id
+        if (dict[id]) return
+        dict[id] = true
+        if (!bounds.contains([geom.coordinates[0], geom.coordinates[1]])) return
 
-      return (
-        <SubmissionMarker
-          {...{ id, feature, geom, onClick, artist }}
-          key={id}
-          selectedSubmission={selected}
-          hidden={hidden}
-        />
-      )
-    })
+        return (
+          <SubmissionMarker
+            {...{ id, feature, geom, onClick, artist, i }}
+            key={id}
+            selectedSubmission={selected}
+            hidden={hidden}
+          />
+        )
+      })
 
     setMarkers(markerArray)
   }, [mapRef, onClick, artist, selected, hidden])

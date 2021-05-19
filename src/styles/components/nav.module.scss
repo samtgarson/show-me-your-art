@@ -33,7 +33,7 @@
 }
 
 @screen sm {
-  .nav:hover {
+  .nav[class~=gallery]:hover {
     & > * {
       background: transparent !important;
     }

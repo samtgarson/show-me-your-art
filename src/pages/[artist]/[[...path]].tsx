@@ -1,6 +1,7 @@
 import { AnimatePresence, AnimateSharedLayout } from 'framer-motion'
-import { GetServerSideProps, NextPage } from 'next'
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Artist, artists } from '~/src/artists'
 import { AboutModal } from '~/src/components/about-modal'
 import { Gallery } from '~/src/components/gallery'
 import { MapContainer } from '~/src/components/map/container'
@@ -8,13 +9,12 @@ import { NavBar } from '~/src/components/nav-bar'
 import { SubmitModal } from '~/src/components/submit/submit-modal'
 import { DataClient } from '~/src/services/data-client'
 import { StateContext } from '~/src/services/state'
-import { matcher } from '~/src/util/route-matcher'
 import { Submissions } from '~/types/entities'
 
 type HomeProps = {
-  page: string
-  path: string[]
-  artist: string
+  page: string | null
+  path: (string | null)[]
+  artist: Artist
 }
 
 const Home: NextPage<HomeProps> = ({ page, artist }) => {
@@ -23,7 +23,7 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
   const [data, setData] = useState<Submissions>({})
 
   const fetchData = useCallback(async () => {
-    const submissions = await client.getSubmissions(artist)
+    const submissions = await client.getSubmissions(artist.id)
     const newData = submissions.reduce(
       (hsh, sub) => ({ ...hsh, [sub.id]: sub }),
       {}
@@ -47,33 +47,53 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
     }
   }, [page])
 
+  if (!artist) return null
   return (
     <StateContext.Provider value={{ start, data }}>
-      <NavBar />
+      <NavBar route={page ?? ''} artist={artist} />
       <AnimateSharedLayout type='crossfade'>
-        <MapContainer search={page == 'submit'} />
+        <MapContainer artist={artist} search={page == 'submit'} />
         <AnimatePresence>{Page && <Page artist={artist} />}</AnimatePresence>
       </AnimateSharedLayout>
     </StateContext.Provider>
   )
 }
 
-const routes = ['', 'about', 'submit', 'gallery', 'submission/*']
-const match = matcher(routes)
+const routes = ['', 'about', 'submit', 'gallery']
+const artistIds = Object.keys(artists)
 
-export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
-  query
-}) => {
-  if (query.artist !== 'enzo') return { notFound: true }
+export const getStaticPaths: GetStaticPaths = async () => {
+  const client = DataClient.withCredentials()
+  const paths = await Promise.all(
+    artistIds.flatMap(async artist => {
+      const subs = await client.getSubmissions(artist)
+      const r = [
+        ...routes.map(path => ({ params: { artist, path: [path] } })),
+        ...subs.map(({ id }) => ({
+          params: { artist, path: ['submission', id] }
+        }))
+      ]
+      return r
+    })
+  )
+  return { paths: paths.flat(), fallback: true }
+}
 
-  const pathParam = (query.path as string[]) ?? []
-  const [page = '', ...path] = pathParam
-  const route = pathParam.join('/')
-  if (!match(route)) return { notFound: true }
+export const getStaticProps: GetStaticProps<HomeProps> = async ({ params }) => {
+  if (!params) return { notFound: true }
 
-  return {
-    props: { page, path, artist: query.artist }
+  const { artist: artistId, path: [page, ...path] = [null, null] } = params as {
+    artist: string
+    path: string[]
   }
+
+  const artist = artists[artistId]
+  if (!artist) return { notFound: true }
+  if (routes.includes(page ?? '') || (page === 'submission' && path[0])) {
+    return { props: { artist, page, path } }
+  }
+
+  return { notFound: true }
 }
 
 export default Home

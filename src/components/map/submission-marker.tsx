@@ -20,6 +20,7 @@ type SubmissionMarkerProps = {
   onClick(evt: MarkerClickEvent): void
   artist: string
   hidden?: boolean
+  i: number
 }
 
 export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
@@ -29,16 +30,18 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
   id,
   onClick,
   artist,
-  hidden = false
+  hidden = false,
+  i
 }) => {
   const { data } = useContext(StateContext)
-  const { sub, cluster, selected, big, content } = useMemo(() => {
+  const { sub, cluster, selected, big, content, notSelected } = useMemo(() => {
     const sub = data[feature.properties?.id]
     const cluster = feature.properties?.cluster
     const selected = selectedSubmission?.id == id
     const big = selected || cluster
     const content = cluster ? feature.properties?.point_count : '×'
-    return { sub, cluster, selected, big, content }
+    const notSelected = selectedSubmission && !selected
+    return { sub, cluster, selected, big, content, notSelected }
   }, [data, feature, id, selectedSubmission])
 
   const clickHandler = useCallback(() => {
@@ -54,10 +57,11 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
           relative: !big,
           'font-thin text-3xl': selected,
           'font-bold text-xl': cluster,
-          'opacity-0 pointer-events-none': hidden
+          'opacity-0 pointer-events-none': hidden,
+          'opacity-50': notSelected
         }
       ),
-    [big, cluster, hidden, selected]
+    [big, cluster, hidden, notSelected, selected]
   )
 
   const [hover, setHover] = useState(false)
@@ -87,9 +91,10 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
           style={{
             backgroundColor: `var(--${artist})`,
             color: !big ? `var(--${artist})` : 'white',
-            width: big ? 40 : 16,
-            height: big ? 40 : 16,
-            margin: big ? 0 : 12
+            width: big ? 35 : 12,
+            height: big ? 35 : 12,
+            margin: big ? 0 : 12,
+            transitionDelay: notSelected ? `${i * 10}ms` : '0ms'
           }}
           onClick={clickHandler}
         >
@@ -98,7 +103,7 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
       </Marker>
       {sub && hover && !selected && !hidden && (
         <div
-          className='fixed bg-white p-4 top-0 left-0 z-50'
+          className='fixed top-0 left-0 z-50 p-4 bg-white'
           style={{
             transform: `translate(${x + 10}px, ${y + 10}px)`,
             width: 200

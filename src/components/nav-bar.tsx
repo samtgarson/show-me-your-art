@@ -1,9 +1,9 @@
 import cn from 'classnames/bind'
 import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion'
-import { useRouter } from 'next/dist/client/router'
 import Link from 'next/link'
 import React, { FC, MouseEvent, useState } from 'react'
 import styles from '~/src/styles/components/nav.module.scss'
+import { Artist } from '../artists'
 
 const cx = cn.bind(styles)
 
@@ -51,12 +51,11 @@ const NavItem: FC<{ href: string }> = ({ href, children }) => (
   </motion.li>
 )
 
-const NavItems: FC<{ mobile?: boolean }> = ({ mobile = false }) => {
-  const {
-    query: { artist, path }
-  } = useRouter()
-  const [route] = (path as string[] | undefined) ?? []
-
+const NavItems: FC<{ mobile?: boolean, route: string, artist: string }> = ({
+  mobile = false,
+  route,
+  artist
+}) => {
   return (
     <motion.ul
       variants={navVariants.wrapper}
@@ -80,12 +79,11 @@ const NavItems: FC<{ mobile?: boolean }> = ({ mobile = false }) => {
   )
 }
 
-export const NavBar: FC = () => {
+export const NavBar: FC<{ artist: Artist, route: string }> = ({
+  artist,
+  route
+}) => {
   const [open, setOpen] = useState(false)
-  const {
-    query: { artist, path }
-  } = useRouter()
-  const [route] = (path as string[] | undefined) ?? []
 
   const hidden = ['about', 'submit'].includes(route)
 
@@ -97,7 +95,8 @@ export const NavBar: FC = () => {
     <nav
       className={cn(
         'sm:top-10 sm:left-10 sm:right-10 top-2 left-2 right-2 sm:h-20 fixed z-40 flex items-start h-16 font-bold',
-        styles.nav
+        styles.nav,
+        route
       )}
     >
       <AnimateSharedLayout type='crossfade'>
@@ -122,9 +121,9 @@ export const NavBar: FC = () => {
                   Show me your{' '}
                   <span
                     className='px-3 py-2 text-sm text-white'
-                    style={{ background: `var(--${artist})` }}
+                    style={{ background: `var(--${artist.id})` }}
                   >
-                    {artist}
+                    {artist.name}
                   </span>
                 </a>
               </Link>
@@ -135,11 +134,13 @@ export const NavBar: FC = () => {
               open={open}
             />
           </div>
-          <NavItems />
-          <AnimatePresence>{open && <NavItems mobile />}</AnimatePresence>
+          <NavItems artist={artist.id} route={route} />
+          <AnimatePresence>
+            {open && <NavItems artist={artist.id} route={route} mobile />}
+          </AnimatePresence>
         </section>
       </AnimateSharedLayout>{' '}
-      <Link href={hidden ? `/${artist}` : `/${artist}/submit`} passHref>
+      <Link href={hidden ? `/${artist.id}` : `/${artist.id}/submit`} passHref>
         <a className='relative items-center hidden h-full px-4 py-3 overflow-hidden text-center bg-white sm:py-5 sm:px-6 w-28 sm:flex transition-colors duration-500'>
           {hidden ? 'Close' : 'Submit'}
         </a>

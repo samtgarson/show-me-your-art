@@ -1,7 +1,8 @@
 import React, { FC } from 'react'
+import { Artist } from '../artists'
 import { Modal } from './modal'
 
-export const AboutModal: FC<{ artist: string }> = () => (
+export const AboutModal: FC<{ artist: Artist }> = () => (
   <Modal>
     <p className='text-lg mb-4'>
       Show Me Your Art is celebrating the artist, the art traveling the world

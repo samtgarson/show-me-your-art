@@ -5,22 +5,22 @@ import React, { FC, useContext, useEffect, useState } from 'react'
 import { ViewportProps } from 'react-map-gl'
 import { StateContext } from 'src/services/state'
 import { mapTransition } from 'src/util/map-data'
+import { Artist } from '~/src/artists'
 import { Map } from './map'
 
 const START_COORDS = { latitude: 51.515579, longitude: -0.12836 }
 
 type MapContainerProps = {
   search: boolean
+  artist: Artist
 }
 
 const {
   publicRuntimeConfig: { mapboxApiToken }
 } = config()
 
-export const MapContainer: FC<MapContainerProps> = ({ search }) => {
+export const MapContainer: FC<MapContainerProps> = ({ search, artist }) => {
   const { start } = useContext(StateContext)
-  const { query } = useRouter()
-  const { artist = 'enzo' } = query as { artist?: string }
   const [viewport, setViewport] = useState<ViewportProps>({
     ...START_COORDS,
     zoom: 8
@@ -32,8 +32,8 @@ export const MapContainer: FC<MapContainerProps> = ({ search }) => {
   const [route, param] = path as string[]
   const selectedId = route === 'submission' ? param : undefined
   const setSelected = (id?: string) => {
-    if (!id) push(`/${artist}`)
-    else push(`/${artist}/submission/${id}`)
+    if (!id) push(`/${artist.id}`)
+    else push(`/${artist.id}/submission/${id}`)
   }
 
   useEffect(() => {
@@ -56,11 +56,11 @@ export const MapContainer: FC<MapContainerProps> = ({ search }) => {
           viewport,
           setViewport,
           search,
-          artist,
           selectedId,
           setSelected,
           token: mapboxApiToken
         }}
+        artist={artist.id}
       />
     </motion.div>
   )

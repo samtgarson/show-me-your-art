@@ -87,7 +87,7 @@ export class DataClient {
   }
 
   async approveSubmission (id: string): Promise<void> {
-    const { error } = this.client
+    const { error } = await this.client
       .from<SubmissionWithMeta>('submissions_with_meta')
       .update({ state: 'approved' }, { returning: 'minimal' })
       .eq('id', id)

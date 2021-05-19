@@ -22,7 +22,7 @@ export type SubmissionWithMeta = Submission & {
 
 export type SubmissionAttrs = Omit<
   Submission,
-  'geography' | 'created_at' | 'id'
+  'geography' | 'created_at' | 'id' | 'state'
 > & {
   longitude: number
   latitude: number

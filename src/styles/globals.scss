@@ -1,6 +1,7 @@
 :root {
   --grey: #EFF1F1;
-  --enzo: #0A187F;
+  --text-dark: #000;
+  --text-light: #fff;
 }
 
 
@@ -20,7 +21,7 @@
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    line-height: 150%;
+    line-height: 1.5;
     font-weight: 400;
   }
 

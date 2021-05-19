@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import React, { FC, useCallback, useState } from 'react'
 import { Form } from 'react-final-form'
+import { Artist } from '~/src/artists'
 import { Button, Input } from '~/src/components/form/input'
 import { DataClient } from '~/src/services/data-client'
 import { LocationSearchResult } from '~/src/services/mapbox-client'
@@ -9,7 +10,7 @@ import { FileInput } from '../form/file-input'
 import { LocationInput } from '../form/location-input'
 import { modalVariants } from '../modal'
 
-type SubmitFormProps = { artist: string, done(): void }
+type SubmitFormProps = { artist: Artist, done(): void }
 type SubmitFormSchema = {
   name: string
   email: string
@@ -35,7 +36,7 @@ const validate = (values: SubmitFormSchema) => {
   return errors
 }
 
-const process = async (
+const processForm = async (
   client: DataClient,
   values: SubmitFormSchema,
   artist: string
@@ -61,7 +62,7 @@ export const SubmitForm: FC<SubmitFormProps> = ({ artist, done }) => {
     async (values: SubmitFormSchema) => {
       setLoading(true)
       try {
-        await process(client, values, artist)
+        await processForm(client, values, artist.id)
         done()
       } catch (_) {
         setLoading(false)
@@ -82,7 +83,7 @@ export const SubmitForm: FC<SubmitFormProps> = ({ artist, done }) => {
           onSubmit={handleSubmit}
           className='flex flex-col'
         >
-          <h2 className='font-bold mb-6 text-xl'>Submit your {artist}</h2>
+          <h2 className='mb-6 text-xl font-bold'>Submit your {artist.name}</h2>
           <p className='mb-8'>
             Please upload a photo of the framed art and show the world where
             your art is. Your email will not be published, we will use it in
@@ -109,7 +110,7 @@ export const SubmitForm: FC<SubmitFormProps> = ({ artist, done }) => {
           <Button disabled={!valid} loading={loading}>
             Submit
           </Button>
-          <p className='text-xs opacity-50 pt-16 mt-auto leading-5'>
+          <p className='pt-16 mt-auto text-xs opacity-50 leading-5'>
             By submitting this information, you are giving us consent to utilise
             it for the sole purpose of this project. We will never share/sell
             your data. We also want to protect your privacy, so we will only

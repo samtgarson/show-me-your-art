@@ -3,13 +3,14 @@ import { StateContext } from '../services/state'
 import Masonry from 'react-masonry-css'
 import { SubmissionPanel } from './submission-panel'
 import { motion } from 'framer-motion'
+import { Artist } from '../artists'
 
 const galleryVariants = {
   hidden: { y: 50, opacity: 0, transition: { ease: 'easeIn' } },
   visible: { y: 0, opacity: 1, transition: { ease: 'easeOut' } }
 }
 
-export const Gallery: FC<{ artist: string }> = () => {
+export const Gallery: FC<{ artist: Artist }> = () => {
   const { data } = useContext(StateContext)
 
   return (
