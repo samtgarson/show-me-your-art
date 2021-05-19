@@ -19,6 +19,7 @@
     "eslint": "*",
     "eslint-plugin-import": "*",
     "eslint-plugin-promise": "*",
+    "fathom-client": "^3.0.0",
     "final-form": "^4.20.2",
     "framer-motion": "^4.1.16",
     "mapbox-gl": "^2.2.0",
