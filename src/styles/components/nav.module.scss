@@ -1,17 +1,45 @@
 .buttonLine {
-  height: 1px;
+  height: 2px;
   width: 100%;
   top: 0.5em;
   left: 0;
   position: absolute;
   background-color: currentColor;
   transition: transform .2s ease-in-out;
+
+  &:first-child {
+    transform: rotate(45deg)
+  }
+
+  &:last-child {
+    transform: rotate(-45deg)
+  }
 }
 
 .buttonLineTop {
-  transform: translateY(-0.2em);
+  transform: translateY(-0.3em) rotate(0deg) !important;
 }
 
 .buttonLineBottom {
-  transform: translateY(0.2em);
+  transform: translateY(0.3em) rotate(0deg) !important;
+}
+
+.bg[class~=closed] {
+  transition-delay: 200ms;
+
+  @screen sm {
+    transition-delay: 0ms;
+  }
+}
+
+@screen sm {
+  .nav:hover {
+    & > * {
+      background: transparent !important;
+    }
+
+    .bg {
+      opacity: 0
+    }
+  }
 }

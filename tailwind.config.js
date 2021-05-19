@@ -8,6 +8,9 @@ module.exports = {
   darkMode: false,
   theme: {
     extend: {
+      spacing: {
+        18: '4.5em'
+      },
       colors: {
         current: 'currentColor',
         transparent: 'transparent',
@@ -29,6 +32,11 @@ module.exports = {
       animation: {
         'fade-in': 'fade-in 0.4s ease-out both'
       }
+    }
+  },
+  variants: {
+    extend: {
+      padding: ['last']
     }
   }
 }

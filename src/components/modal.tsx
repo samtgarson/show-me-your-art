@@ -1,5 +1,10 @@
 import { motion } from 'framer-motion'
 import React, { FC } from 'react'
+import cn from 'classnames'
+import styles from '~/src/styles/components/modal.module.scss'
+import navStyles from '~/src/styles/components/nav.module.scss'
+import { useRouter } from 'next/dist/client/router'
+import Link from 'next/link'
 
 export const modalVariants = {
   modal: {
@@ -12,16 +17,29 @@ export const modalVariants = {
   }
 }
 
-export const Modal: FC = ({ children }) => (
-  <motion.div
-    layout
-    variants={modalVariants.modal}
-    initial='hidden'
-    animate='visible'
-    exit='hidden'
-    className='fixed left-2 sm:left-auto top-16 bottom-2 sm:bottom-auto overflow-auto sm:top-28 bg-black p-10 text-white normal-case tracking-normal sm:max-w-xl sm:w-full right-2 sm:right-10 origin-top-right flex flex-col justify-start items-start'
-    style={{ minHeight: '50vh', maxHeight: '80vh', height: 600 }}
-  >
-    {children}
-  </motion.div>
-)
+export const Modal: FC = ({ children }) => {
+  const {
+    query: { artist = '' }
+  } = useRouter()
+  return (
+    <motion.div
+      layout
+      variants={modalVariants.modal}
+      initial='hidden'
+      animate='visible'
+      exit='hidden'
+      className={cn(
+        styles.modal,
+        'z-50 left-2 sm:left-auto top-2 bottom-2 sm:bottom-auto sm:top-32 sm:max-w-xl sm:w-full right-2 sm:right-10 fixed flex flex-col items-start justify-start p-10 pt-20 sm:pt-10 overflow-auto tracking-normal text-white normal-case origin-top-right bg-black'
+      )}
+    >
+      <Link href={`/${artist}`}>
+        <a className='w-8 h-6 absolute top-0 right-0 m-10 sm:hidden'>
+          <span className={cn(navStyles.buttonLine)} />
+          <span className={cn(navStyles.buttonLine)} />
+        </a>
+      </Link>
+      {children}
+    </motion.div>
+  )
+}

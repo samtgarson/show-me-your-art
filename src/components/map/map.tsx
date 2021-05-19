@@ -108,8 +108,8 @@ export const Map: FC<MapProps> = ({
               <SubmissionPanel
                 ref={popupRef}
                 submission={selected}
-                className='p-4 sm:p-6 max-w-full min-w-full sm:min-w-0'
-                style={{ width: '50vh' }}
+                className='sm:p-6 p-4'
+                style={{ width: '50vh', maxWidth: '90vw' }}
               />
             </Popup>
           )}

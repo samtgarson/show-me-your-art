@@ -2,7 +2,7 @@ import cn from 'classnames/bind'
 import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion'
 import { useRouter } from 'next/dist/client/router'
 import Link from 'next/link'
-import React, { FC, useState } from 'react'
+import React, { FC, MouseEvent, useState } from 'react'
 import styles from '~/src/styles/components/nav.module.scss'
 
 const cx = cn.bind(styles)
@@ -14,7 +14,7 @@ const NavMenu: FC<{ onClick(): void, className: string, open: boolean }> = ({
 }) => (
   <motion.button
     layoutId='nav-button'
-    className={cn('w-5 h-5 relative', className)}
+    className={cn('w-6 h-5 relative', className)}
     onClick={onClick}
   >
     <motion.span className={cx('buttonLine', { buttonLineTop: !open })} />
@@ -24,21 +24,27 @@ const NavMenu: FC<{ onClick(): void, className: string, open: boolean }> = ({
 
 const navVariants = {
   wrapper: {
-    initial: { opacity: 0, transition: { staggerChildren: 0.1 } },
+    initial: {
+      opacity: 0,
+      transition: { staggerChildren: 0.1, staggerDirection: -1 }
+    },
     animate: { opacity: 1, transition: { staggerChildren: 0.1 } }
   },
   item: {
-    initial: { opacity: 0, y: -5, transition: { ease: 'easeOut' } },
-    animate: { opacity: 1, y: 0 }
-  },
-  close: {
-    initial: { opacity: 0, y: -5, transition: { ease: 'easeOut' } },
-    animate: { opacity: 1, y: 0 }
+    initial: {
+      opacity: 0,
+      y: -5,
+      transition: { ease: 'easeIn' }
+    },
+    animate: { opacity: 1, y: 0, transition: { ease: 'easeOut' } }
   }
 }
 
 const NavItem: FC<{ href: string }> = ({ href, children }) => (
-  <motion.li variants={navVariants.item} className='my-2 sm:my-0 sm:mx-3'>
+  <motion.li
+    variants={navVariants.item}
+    className='py-3 sm:my-0 sm:mx-3 last:pb-1'
+  >
     <Link href={href}>
       <a>{children}</a>
     </Link>
@@ -53,21 +59,23 @@ const NavItems: FC<{ mobile?: boolean }> = ({ mobile = false }) => {
 
   return (
     <motion.ul
-      className={cn('list-none mt-5 sm:mt-0', {
-        'block sm:hidden': mobile,
-        'hidden sm:flex': !mobile
-      })}
-      variants={mobile ? navVariants.wrapper : {}}
+      variants={navVariants.wrapper}
       initial='initial'
       animate='animate'
       exit='initial'
+      className={cn('list-none mt-3 sm:mt-0 z-10', {
+        'block sm:hidden': mobile,
+        'hidden sm:flex': !mobile
+      })}
     >
+      {mobile && <NavItem href={`/${artist}`}>Home</NavItem>}
       {route == 'gallery' ? (
         <NavItem href={`/${artist}`}>View map</NavItem>
       ) : (
         <NavItem href={`/${artist}/gallery`}>View gallery</NavItem>
       )}
       <NavItem href={`/${artist}/about`}>About</NavItem>
+      {mobile && <NavItem href={`/${artist}/submit`}>Submit</NavItem>}
     </motion.ul>
   )
 }
@@ -81,38 +89,61 @@ export const NavBar: FC = () => {
 
   const hidden = ['about', 'submit'].includes(route)
 
+  const navClick = (e: MouseEvent) => {
+    if ((e.target as HTMLElement).tagName === 'A') setOpen(false)
+  }
+
   return (
-    <nav className='fixed sm:top-10 sm:left-10 sm:right-10 top-2 left-2 right-2 z-40 font-bold flex items-start h-16'>
+    <nav
+      className={cn(
+        'sm:top-10 sm:left-10 sm:right-10 top-2 left-2 right-2 sm:h-20 fixed z-40 flex items-start h-16 font-bold',
+        styles.nav
+      )}
+    >
       <AnimateSharedLayout type='crossfade'>
-        <motion.section
-          layout
+        <section
+          onClick={navClick}
           className={cn(
-            'bg-white py-3 px-4 sm:py-5 sm:px-6 mr-1 sm:flex items-center flex-grow transition h-full transform',
+            'relative py-6 px-5 sm:py-5 sm:px-6 mr-1 flex content-stretch sm:items-center flex-grow transition sm:h-full transform items-start flex-col sm:flex-row',
             { 'opacity-0 -translate-y-2 pointer-events-none': hidden }
           )}
-          transition={{ ease: 'easeOut' }}
         >
-          <div className='flex sm:mr-auto transition'>
-            <motion.h1 layoutId='nav-title' className='mr-auto'>
+          <span
+            className={cn(
+              'bg-white absolute top-0 left-0 right-0 z-0 transition-all duration-500',
+              styles.bg,
+              { 'h-18 sm:h-full closed': !open, 'h-full open': open }
+            )}
+          />
+          <div className='z-10 flex w-full sm:mr-auto sm:w-auto transition'>
+            <h1 className='mr-auto'>
               <Link href={`/${artist}`}>
-                <a>Show me your Enzo</a>
+                <a>
+                  Show me your{' '}
+                  <span
+                    className='px-3 py-2 text-sm text-white'
+                    style={{ background: `var(--${artist})` }}
+                  >
+                    {artist}
+                  </span>
+                </a>
               </Link>
-            </motion.h1>
+            </h1>
             <NavMenu
-              className='block sm:hidden'
+              className='block ml-auto sm:hidden'
               onClick={() => setOpen(!open)}
               open={open}
             />
           </div>
           <NavItems />
           <AnimatePresence>{open && <NavItems mobile />}</AnimatePresence>
-        </motion.section>
-      </AnimateSharedLayout>
-      <div className='bg-white py-3 px-4 sm:py-5 sm:px-6 relative overflow-hidden h-full w-28 text-center'>
-        <Link href={hidden ? `/${artist}` : `/${artist}/submit`} passHref>
-          <a>{hidden ? 'Close' : 'Submit'}</a>
-        </Link>
-      </div>
+        </section>
+      </AnimateSharedLayout>{' '}
+      <Link href={hidden ? `/${artist}` : `/${artist}/submit`} passHref>
+        <a className='relative items-center hidden h-full px-4 py-3 overflow-hidden text-center bg-white sm:py-5 sm:px-6 w-28 sm:flex transition-colors duration-500'>
+          {hidden ? 'Close' : 'Submit'}
+        </a>
+      </Link>
     </nav>
   )
 }
