@@ -9,11 +9,10 @@ export const ArtistLink: FC<{ artist: IArtist, className?: string }> = ({
 }) => (
   <Link href={`/${artist.id}`}>
     <a
-      className={cn(className, 'px-4 py-3 font-bold')}
+      className={cn(className, 'px-4 py-3 font-bold text-[2vh]')}
       style={{
         background: `var(--${artist.id})`,
-        color: `var(--text-${artist.fg})`,
-        fontSize: '2vh'
+        color: `var(--text-${artist.fg})`
       }}
     >
       {artist.name}

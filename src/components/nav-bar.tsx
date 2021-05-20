@@ -116,7 +116,7 @@ export const NavBar: FC<{ artist: Artist, route: string }> = ({
           />
           <div className='z-10 flex w-full sm:mr-auto sm:w-auto transition'>
             <h1 className='mr-auto'>
-              <Link href={`/${artist}`}>
+              <Link href='/'>
                 <a>
                   Show me your{' '}
                   <span

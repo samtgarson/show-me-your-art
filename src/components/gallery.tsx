@@ -19,7 +19,7 @@ export const Gallery: FC<{ artist: Artist }> = () => {
       initial='hidden'
       animate='visible'
       exit='hidden'
-      className='z-20 w-screen h-screen fixed top-0 left-0 bg-white overflow-auto'
+      className='z-20 w-screen h-screen fixed top-0 left-0 bg-white overflow-auto overscroll-contain'
     >
       <Masonry
         breakpointCols={{ default: 3, 1024: 3, 768: 2, 640: 1 }}

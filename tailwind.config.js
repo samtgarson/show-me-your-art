@@ -1,6 +1,5 @@
-const plugin = require('tailwindcss/plugin')
-
 module.exports = {
+  mode: 'jit',
   purge: [
     './src/pages/**/*.{js,ts,jsx,tsx}',
     './src/components/**/*.{js,ts,jsx,tsx}'
@@ -32,11 +31,6 @@ module.exports = {
       animation: {
         'fade-in': 'fade-in 0.4s ease-out both'
       }
-    }
-  },
-  variants: {
-    extend: {
-      padding: ['last']
     }
   }
 }

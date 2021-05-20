@@ -58,7 +58,7 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
           'font-thin text-3xl': selected,
           'font-bold text-xl': cluster,
           'opacity-0 pointer-events-none': hidden,
-          'opacity-50': notSelected
+          '': notSelected
         }
       ),
     [big, cluster, hidden, notSelected, selected]
