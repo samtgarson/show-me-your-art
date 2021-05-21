@@ -1,28 +1,29 @@
+import { AnimatePresence } from 'framer-motion'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
-import React from 'react'
-import { artists } from '../artists'
+import React, { useState } from 'react'
+import { Artist } from '../artists'
+import { ArtistTransition } from '../components/artist-transition'
+import { TransitionState } from '../services/state'
 import '../styles/globals.scss'
 import { useFathom } from '../util/use-fathom'
 
-const artistVars = Object.values(artists).reduce(
-  (styles, artist) => ({
-    ...styles,
-    [`--${artist.id}`]: artist.bg
-  }),
-  {}
-)
-
 const CustomApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   useFathom()
+  const [transitionArtist, setTransition] = useState<Artist | null>(null)
 
   return (
-    <main style={artistVars}>
+    <main>
       <Head>
         <title>Show Me Your Art</title>
         <link rel='shortcut icon' href='/mela.png' />
       </Head>
-      <Component {...pageProps} />
+      <AnimatePresence>
+        {transitionArtist && <ArtistTransition artist={transitionArtist} />}
+      </AnimatePresence>
+      <TransitionState.Provider value={setTransition}>
+        <Component {...pageProps} />
+      </TransitionState.Provider>
     </main>
   )
 }

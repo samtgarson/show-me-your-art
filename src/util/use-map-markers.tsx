@@ -7,12 +7,13 @@ import {
   SubmissionMarker
 } from 'src/components/map/submission-marker'
 import { SubmissionWithMeta } from '~/types/entities'
+import { Artist } from '../artists'
 import { mapTransition } from './map-data'
 
 type UseMarkersProps = {
   viewport: ViewportProps
   setViewport(viewport: ViewportProps): void
-  artist: string
+  artist: Artist
   hidden: boolean
   mapRef: MapRef | null
   selected?: SubmissionWithMeta
@@ -82,7 +83,7 @@ export const useMarkers = ({
 
         return (
           <SubmissionMarker
-            {...{ id, feature, geom, onClick, artist, i }}
+            {...{ id, feature, geom, onClick, i, artist }}
             key={id}
             selectedSubmission={selected}
             hidden={hidden}

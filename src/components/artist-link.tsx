@@ -1,21 +1,23 @@
-import React, { FC } from 'react'
 import cn from 'classnames'
+import React, { FC } from 'react'
 import { Artist as IArtist } from 'src/artists'
-import Link from 'next/link'
+import { DelayLink } from './delay-link'
 
 export const ArtistLink: FC<{ artist: IArtist, className?: string }> = ({
   artist,
   className = ''
-}) => (
-  <Link href={`/${artist.id}`}>
-    <a
+}) => {
+  return (
+    <DelayLink
+      artist={artist}
+      href={`/${artist.id}`}
       className={cn(className, 'px-4 py-3 font-bold text-[2vh]')}
       style={{
-        background: `var(--${artist.id})`,
+        background: artist.bg,
         color: `var(--text-${artist.fg})`
       }}
     >
       {artist.name}
-    </a>
-  </Link>
-)
+    </DelayLink>
+  )
+}

@@ -58,9 +58,9 @@ export const MapContainer: FC<MapContainerProps> = ({ search, artist }) => {
           search,
           selectedId,
           setSelected,
-          token: mapboxApiToken
+          token: mapboxApiToken,
+          artist
         }}
-        artist={artist.id}
       />
     </motion.div>
   )

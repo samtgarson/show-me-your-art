@@ -18,6 +18,7 @@ import {
   toGeoJson
 } from 'src/util/map-data'
 import { useMarkers } from 'src/util/use-map-markers'
+import { Artist } from '~/src/artists'
 
 type MapProps = {
   viewport: ViewportProps
@@ -25,7 +26,7 @@ type MapProps = {
     viewport: ViewportProps | ((viewport: ViewportProps) => ViewportProps)
   ): void
   search: boolean
-  artist: string
+  artist: Artist
   selectedId?: string
   setSelected(id?: string): void
   token: string

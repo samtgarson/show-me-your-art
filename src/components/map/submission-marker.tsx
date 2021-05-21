@@ -7,6 +7,7 @@ import { SubmissionWithMeta } from '~/types/entities'
 import { StateContext } from 'src/services/state'
 import { debounce } from 'src/util/debounce'
 import { submissionImageSrc } from 'src/components/submission-panel'
+import { Artist } from '~/src/artists'
 
 export type MarkerClickEvent =
   | { cluster: true, clusterId: number, geom: Point }
@@ -18,7 +19,7 @@ type SubmissionMarkerProps = {
   geom: Point
   id: string
   onClick(evt: MarkerClickEvent): void
-  artist: string
+  artist: Artist
   hidden?: boolean
   i: number
 }
@@ -89,8 +90,8 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
           )}
           className={classes}
           style={{
-            backgroundColor: `var(--${artist})`,
-            color: !big ? `var(--${artist})` : 'white',
+            backgroundColor: artist.bg,
+            color: !big ? artist.bg : 'white',
             width: big ? 35 : 12,
             height: big ? 35 : 12,
             margin: big ? 0 : 12,
@@ -103,7 +104,7 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
       </Marker>
       {sub && hover && !selected && !hidden && (
         <div
-          className='fixed top-0 left-0 z-50 p-4 bg-white'
+          className='fixed top-0 left-0 z-40 p-4 bg-white'
           style={{
             transform: `translate(${x + 10}px, ${y + 10}px)`,
             width: 200
