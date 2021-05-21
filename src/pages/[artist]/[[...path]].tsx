@@ -1,15 +1,23 @@
-import { AnimatePresence, AnimateSharedLayout } from 'framer-motion'
+import {
+  AnimatePresence,
+  AnimateSharedLayout,
+  usePresence
+} from 'framer-motion'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Artist, artists } from '~/src/artists'
 import { AboutModal } from '~/src/components/about-modal'
 import { Gallery } from '~/src/components/gallery'
-import { MapContainer } from '~/src/components/map/container'
 import { NavBar } from '~/src/components/nav-bar'
 import { SubmitModal } from '~/src/components/submit/submit-modal'
 import { DataClient } from '~/src/services/data-client'
 import { StateContext } from '~/src/services/state'
 import { Submissions } from '~/types/entities'
+import dynamic from 'next/dynamic'
+
+const MapContainer = dynamic(
+  async () => (await import('~/src/components/map/container')).MapContainer
+)
 
 type HomeProps = {
   page: string | null
@@ -21,6 +29,11 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
   const [start, setStart] = useState(false)
   const client = DataClient.useClient()
   const [data, setData] = useState<Submissions>({})
+  const [isPresent, safeToRemove] = usePresence()
+
+  useEffect(() => {
+    !isPresent && safeToRemove && setTimeout(safeToRemove, 1000)
+  }, [isPresent, safeToRemove])
 
   const fetchData = useCallback(async () => {
     const submissions = await client.getSubmissions(artist.id)

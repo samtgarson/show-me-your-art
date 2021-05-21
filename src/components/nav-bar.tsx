@@ -4,7 +4,6 @@ import Link from 'next/link'
 import React, { FC, MouseEvent, useState } from 'react'
 import styles from '~/src/styles/components/nav.module.scss'
 import { Artist } from '../artists'
-import { DelayLink } from './delay-link'
 
 const cx = cn.bind(styles)
 
@@ -117,18 +116,17 @@ export const NavBar: FC<{ artist: Artist, route: string }> = ({
           />
           <div className='z-10 flex w-full sm:mr-auto sm:w-auto transition'>
             <h1 className='mr-auto'>
-              <DelayLink artist={artist} href='/'>
-                Show me your{' '}
-                <span
-                  className='px-3 py-2 text-sm text-white'
-                  style={{
-                    background: artist.bg,
-                    color: `var(--text-${artist.fg})`
-                  }}
-                >
-                  {artist.name}
-                </span>
-              </DelayLink>
+              <Link href='/'>
+                <a>
+                  Show me your{' '}
+                  <span
+                    className='px-3 py-2 text-sm text-white'
+                    style={{ background: artist.bg }}
+                  >
+                    {artist.name}
+                  </span>
+                </a>
+              </Link>
             </h1>
             <NavMenu
               className='block ml-auto sm:hidden'

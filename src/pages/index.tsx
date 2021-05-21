@@ -1,15 +1,22 @@
-import React, { Fragment } from 'react'
+import cn from 'classnames'
+import { usePresence } from 'framer-motion'
 import { NextPage } from 'next'
-import { Marquee } from '../components/marquee'
+import React, { Fragment, useEffect } from 'react'
+import styles from 'src/styles/pages/home.module.scss'
 import { artists } from '../artists'
 import { ArtistLink } from '../components/artist-link'
-import cn from 'classnames'
-import styles from 'src/styles/pages/home.module.scss'
+import { Marquee } from '../components/marquee'
 
 const words = 'Show Me Your Art'.split(' ')
 const list = Object.values(artists)
 
-const Home: NextPage = () => {
+const Landing: NextPage = () => {
+  const [isPresent, safeToRemove] = usePresence()
+
+  useEffect(() => {
+    !isPresent && safeToRemove && setTimeout(safeToRemove, 1000)
+  }, [isPresent, safeToRemove])
+
   const items = [...words, ...words].map((word, i) => (
     <Fragment key={`${word}-${i}`}>
       <ArtistLink
@@ -42,4 +49,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default Landing

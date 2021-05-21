@@ -1,6 +1,5 @@
-import React, { CSSProperties, FC, Fragment } from 'react'
-import styles from '~/src/styles/components/marquee.module.scss'
 import cn from 'classnames/bind'
+import React, { CSSProperties, FC, Fragment } from 'react'
 
 type MarqueeProps = {
   duration?: number
@@ -21,18 +20,20 @@ export const Marquee: FC<MarqueeProps> = ({
       style={
         {
           '--duration': `${duration}s`,
-          '--offset': `${offset}%`
+          '--offset': `${offset}%`,
+          '--move-initial': 'calc(0% - var(--offset))',
+          '--move-final': 'calc(-58.2% - var(--offset))'
         } as CSSProperties
       }
-      className={cn(
-        styles.marquee,
-        className,
-        'w-full relative overflow-x-hidden'
-      )}
+      className={cn(className, 'w-screen relative overflow-x-hidden py-[1vh]')}
     >
       <div
-        className={cn(styles.inner)}
-        style={{ animationDirection: reverse ? 'reverse' : 'normal' }}
+        className={cn('flex items-center relative w-[fit-content]')}
+        style={{
+          transform: 'translate3d(var(--move-initial), 0, 0)',
+          animation: 'marquee var(--duration, 30s) linear infinite',
+          animationDirection: reverse ? 'reverse' : 'normal'
+        }}
       >
         <Fragment key={1}>{children}</Fragment>
         <Fragment key={2}>{children}</Fragment>

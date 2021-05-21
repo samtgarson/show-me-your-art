@@ -9,6 +9,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes marquee {
+  0% {
+    transform: translate3d(var(--move-initial), 0, 0);
+  }
+
+  100% {
+    transform: translate3d(var(--move-final), 0, 0);
+  }
+}
+
 @layer base {
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
 
