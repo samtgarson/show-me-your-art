@@ -35,10 +35,12 @@ export const ArtistTransition: FC = () => {
     ? artists[query.artist as keyof typeof artists]
     : null
   const [artist, setArtist] = useState<Artist | null>(queryArtist)
+  const [reverse, setReverse] = useState(false)
   const previousArtist = useRef<Artist>()
 
   useEffect(() => {
     if (queryArtist) {
+      setReverse(false)
       setArtist(queryArtist)
 
       setTimeout(() => {
@@ -47,6 +49,7 @@ export const ArtistTransition: FC = () => {
       }, 1000)
     } else if (previousArtist.current) {
       const prev = previousArtist.current
+      setReverse(true)
       setArtist(prev)
 
       setTimeout(() => {
@@ -67,9 +70,9 @@ export const ArtistTransition: FC = () => {
             color: `var(--text-${artist.fg})`
           }}
           className='fixed top-0 bottom-0 left-0 right-0 z-50 flex items-center justify-center font-bold whitespace-nowrap'
-          initial='enter'
+          initial={ reverse ? 'exit' : 'enter' }
           animate='animate'
-          exit='exit'
+          exit={ reverse ? 'enter' : 'exit' }
           variants={variants.wrapper}
           transition={{ duration: 0.6 }}
         >
