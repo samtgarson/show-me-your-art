@@ -57,4 +57,12 @@
       animation-delay: #{($i - 1) * 150}ms;
     }
   }
+
+  .arrow-down::after {
+    content: '';
+    @apply absolute w-0 h-0 left-1/2 -translate-x-1/2 top-full;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid white;
+  }
 }

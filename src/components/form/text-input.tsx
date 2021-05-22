@@ -1,6 +1,8 @@
 import cn from 'classnames'
+import { AnimatePresence } from 'framer-motion'
 import React, { FC, useState } from 'react'
 import { FieldRenderProps } from 'react-final-form'
+import { Tooltip } from '../tooltip'
 import { Label } from './input'
 
 export const TextInput: FC<FieldRenderProps<string>> = ({
@@ -13,6 +15,9 @@ export const TextInput: FC<FieldRenderProps<string>> = ({
 
   return (
     <>
+      <AnimatePresence>
+        {inputProps.tooltip && focus && <Tooltip>{inputProps.tooltip}</Tooltip>}
+      </AnimatePresence>
       <input
         className={cn(
           'w-full bg-transparent transition-translate transform placeholder-white outline-none',
@@ -40,7 +45,7 @@ export const TextInput: FC<FieldRenderProps<string>> = ({
         {label}
       </Label>
       {dirty && error && (
-        <span className='absolute right-6 text-right'>{error}</span>
+        <span className='absolute text-right right-6'>{error}</span>
       )}
     </>
   )

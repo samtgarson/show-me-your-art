@@ -112,6 +112,7 @@ export const LocationInput: FC<FieldRenderProps<LocationSearchResult>> = ({
         meta={{ dirty, error }}
         input={textInputMeta}
         onKeyDown={handleKeyUp}
+        tooltip="Start typing and we'll suggest some options"
       />
       <AnimatePresence>
         {search.length > 2 && (
@@ -122,7 +123,7 @@ export const LocationInput: FC<FieldRenderProps<LocationSearchResult>> = ({
             initial='hidden'
             animate='visible'
             exit='hidden'
-            className='absolute z-50 py-4 text-black bg-white left-0 right-0 top-full origin-top-left'
+            className='absolute left-0 right-0 z-50 py-4 text-black bg-white top-full origin-top-left'
           >
             {loading && !options.length && (
               <motion.li className='px-10 py-4 opacity-50'>Loading</motion.li>
