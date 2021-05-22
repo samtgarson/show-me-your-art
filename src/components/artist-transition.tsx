@@ -70,9 +70,9 @@ export const ArtistTransition: FC = () => {
             color: `var(--text-${artist.fg})`
           }}
           className='fixed top-0 bottom-0 left-0 right-0 z-50 flex items-center justify-center font-bold whitespace-nowrap'
-          initial={ reverse ? 'exit' : 'enter' }
+          initial={reverse ? 'exit' : 'enter'}
           animate='animate'
-          exit={ reverse ? 'enter' : 'exit' }
+          exit={reverse ? 'enter' : 'exit'}
           variants={variants.wrapper}
           transition={{ duration: 0.6 }}
         >

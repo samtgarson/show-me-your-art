@@ -5,12 +5,15 @@ import React from 'react'
 import { ArtistTransition } from '../components/artist-transition'
 import '../styles/globals.scss'
 import { useFathom } from '../util/use-fathom'
+import config from 'next/config'
+import { Prelaunch } from '../components/prelaunch'
+
+const {
+  publicRuntimeConfig: { prelaunch }
+} = config()
 
 const CustomApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   useFathom()
-  /* const { Component: DelayedComponent, props: delayedProps } = useDelayedRender( */
-  /*   { Component, props: pageProps } */
-  /* ) */
 
   return (
     <main>
@@ -18,10 +21,16 @@ const CustomApp = ({ Component, pageProps }: AppProps): JSX.Element => {
         <title>Show Me Your Art</title>
         <link rel='shortcut icon' href='/mela.png' />
       </Head>
-      <ArtistTransition />
-      <AnimatePresence exitBeforeEnter>
-        <Component {...pageProps} key={Component.name} />
-      </AnimatePresence>
+      {prelaunch ? (
+        <Prelaunch />
+      ) : (
+        <>
+          <ArtistTransition />
+          <AnimatePresence exitBeforeEnter>
+            <Component {...pageProps} key={Component.name} />
+          </AnimatePresence>
+        </>
+      )}
     </main>
   )
 }

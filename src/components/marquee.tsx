@@ -13,7 +13,7 @@ export const Marquee: FC<MarqueeProps> = ({
   duration = 30,
   className,
   reverse = false,
-  offset = 5
+  offset = 0
 }) => {
   return (
     <div
@@ -22,7 +22,7 @@ export const Marquee: FC<MarqueeProps> = ({
           '--duration': `${duration}s`,
           '--offset': `${offset}%`,
           '--move-initial': 'calc(0% - var(--offset))',
-          '--move-final': 'calc(-58.2% - var(--offset))'
+          '--move-final': 'calc(-33.3% - var(--offset))'
         } as CSSProperties
       }
       className={cn(className, 'w-screen relative overflow-x-hidden py-[1vh]')}
@@ -37,6 +37,7 @@ export const Marquee: FC<MarqueeProps> = ({
       >
         <Fragment key={1}>{children}</Fragment>
         <Fragment key={2}>{children}</Fragment>
+        <Fragment key={3}>{children}</Fragment>
       </div>
     </div>
   )
