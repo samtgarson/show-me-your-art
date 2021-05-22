@@ -12,7 +12,7 @@ export const Input: FC<InputProps> = ({
   return (
     <div
       className={cn(
-        'relative bg-white bg-opacity-10 mb-2 h-20 flex items-center px-8 flex-shrink-0'
+        'relative bg-white bg-opacity-10 -mx-10 mb-2 h-20 flex items-center px-10 flex-shrink-0'
       )}
     >
       <Field {...props} name={name} component={component} />
@@ -29,7 +29,7 @@ export const Label: FC<{ focus?: boolean, name: string }> = ({
     <label
       htmlFor={name}
       className={cn(
-        'absolute left-8 right-8 transition-all transform text-left',
+        'absolute left-10 right-10 transition-all transform text-left',
         {
           'text-xs opacity-50 -translate-y-4': focus
         }
@@ -48,7 +48,7 @@ export const Button: FC<{ disabled?: boolean, loading?: boolean }> = ({
   <button
     disabled={disabled || loading}
     className={cn(
-      'h-20 px-8 w-full flex justify-between items-center uppercase font-bold flex-shrink-0 transition',
+      'h-20 -mx-10 px-10 flex justify-between items-center uppercase font-bold flex-shrink-0 transition',
       {
         'opacity-25 cursor-default': disabled,
         'bg-white text-black': !disabled,

@@ -11,7 +11,9 @@ module.exports = {
         current: 'currentColor',
         transparent: 'transparent',
         white: 'white',
-        grey: 'var(--grey)'
+        grey: 'var(--grey)',
+        error: 'var(--error)',
+        errorDark: 'var(--error-dark)'
       },
       keyframes: {
         'fade-in': {

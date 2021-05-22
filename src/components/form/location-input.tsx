@@ -85,7 +85,7 @@ export const LocationInput: FC<FieldRenderProps<LocationSearchResult>> = ({
             setSearch('')
             onChange(undefined)
           }}
-          className='w-full transform translate-y-1 cursor-pointer'
+          className='w-full cursor-pointer transform translate-y-1'
         >
           <Location l={value} />
           <img src='/icons/close.svg' className='float-right' />
@@ -95,8 +95,8 @@ export const LocationInput: FC<FieldRenderProps<LocationSearchResult>> = ({
 
   const variants = {
     ul: {
-      hidden: { opacity: 0, scale: 0.95 },
-      visible: { opacity: 1, scale: 1 }
+      hidden: { opacity: 0, scaleY: 0.95 },
+      visible: { opacity: 1, scaleY: 1 }
     },
     li: {
       hidden: { opacity: 0 },
@@ -122,13 +122,13 @@ export const LocationInput: FC<FieldRenderProps<LocationSearchResult>> = ({
             initial='hidden'
             animate='visible'
             exit='hidden'
-            className='w-full absolute left-0 right-0 top-full py-4 bg-white text-black z-50 origin-top-left'
+            className='absolute z-50 py-4 text-black bg-white left-0 right-0 top-full origin-top-left'
           >
             {loading && !options.length && (
-              <li className='px-8 py-4 opacity-50'>Loading</li>
+              <motion.li className='px-10 py-4 opacity-50'>Loading</motion.li>
             )}
             {!loading && !options.length && search.length > 2 && (
-              <li className='px-8 py-4'>No results</li>
+              <motion.li className='px-10 py-4'>No results</motion.li>
             )}
             {options.map((opt, i) => (
               <motion.li
@@ -138,14 +138,14 @@ export const LocationInput: FC<FieldRenderProps<LocationSearchResult>> = ({
                 onMouseOver={() => setActive(i)}
                 onMouseDown={e => e.preventDefault()}
                 onClick={() => onChange(opt)}
-                className='px-8 py-4 cursor-pointer relative'
+                className='relative px-10 py-4 cursor-pointer'
               >
                 <Location l={opt} />
                 {active == i && (
                   <motion.span
                     layout
                     layoutId='selection'
-                    className='absolute left-0 right-0 top-0 bottom-0 bg-black bg-opacity-5'
+                    className='absolute top-0 bottom-0 left-0 right-0 bg-black bg-opacity-5'
                   />
                 )}
               </motion.li>

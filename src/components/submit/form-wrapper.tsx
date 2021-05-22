@@ -56,16 +56,19 @@ const processForm = async (
 
 export const SubmitForm: FC<SubmitFormProps> = ({ artist, done }) => {
   const client = DataClient.useClient()
+  const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const onSubmit = useCallback(
     async (values: SubmitFormSchema) => {
+      setError(false)
       setLoading(true)
       try {
         await processForm(client, values, artist.id)
         done()
       } catch (_) {
         setLoading(false)
+        setError(true)
       }
     },
     [artist, client, done]
@@ -85,9 +88,8 @@ export const SubmitForm: FC<SubmitFormProps> = ({ artist, done }) => {
         >
           <h2 className='mb-6 text-xl font-bold'>Submit your {artist.name}</h2>
           <p className='mb-8'>
-            Please upload a photo of the framed art and show the world where
-            your art is. Your email will not be published, we will use it in
-            case we need to get in touch.
+            Upload a photo of the framed art and show the world where your art
+            is.
           </p>
           <Input
             name='name'
@@ -107,15 +109,21 @@ export const SubmitForm: FC<SubmitFormProps> = ({ artist, done }) => {
             label='Location'
             placeholder='e.g. Brooklyn, New York'
           />
+          {error && (
+            <p className='flex items-center h-20 px-10 mb-2 -mx-10 text-error bg-errorDark'>
+              Something went wrong. Please try again or{' '}
+              <a className='ml-3 underline' href='mailto:hello@showmeyour.art'>
+                let us know!
+              </a>
+            </p>
+          )}
           <Button disabled={!valid} loading={loading}>
             Submit
           </Button>
           <p className='pt-16 mt-auto text-xs opacity-50 leading-5'>
-            By submitting this information, you are giving us consent to utilise
-            it for the sole purpose of this project. We will never share/sell
-            your data. We also want to protect your privacy, so we will only
-            accept an area or neighborhood name as a location—never your
-            address.
+            By tapping “Submit”, you are giving us permission to store and use
+            this information for the sole purpose of this project. We will never
+            share or sell your data.
           </p>
         </motion.form>
       )}

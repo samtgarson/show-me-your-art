@@ -4,7 +4,7 @@ import { Modal } from './modal'
 
 export const AboutModal: FC<{ artist: Artist }> = () => (
   <Modal>
-    <p className='text-lg mb-4'>
+    <p className='mb-4 text-lg'>
       Show Me Your Art is celebrating the artist, the art traveling the world
       and the appreciation of it in our spaces.
     </p>
@@ -12,7 +12,7 @@ export const AboutModal: FC<{ artist: Artist }> = () => (
     <p className='text-lg'>
       Submit yours and explore where others have theirs.
     </p>
-    <small className='mt-auto'>
+    <small className='px-10 pt-10 mt-auto -mx-10 border-t border-white'>
       A project by{' '}
       <a
         className='underline'
@@ -32,7 +32,9 @@ export const AboutModal: FC<{ artist: Artist }> = () => (
         Jamin Galea
       </a>
       <br />
-      Get in touch: hello@showmeyour.art
+      <a href='mailto:hello@showmeyour.art' className='underline'>
+        hello@showmeyour.art
+      </a>
     </small>
   </Modal>
 )
