@@ -27,19 +27,21 @@ export const EmptyModal: FC<{ artist: Artist }> = ({ artist }) => {
   }, [artist, share])
 
   return (
-    <div className='fixed z-40 text-center bg-white top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 normal-text w-max max-w-[90vw] p-14'>
-      <img src='/icons/sad.svg' className='mx-auto mb-10' />
-      <p className='mb-12'>
-        No {artist.name} submissions yet.
-        <br />
-        Submit yours or let your friend know to submit theirs.
-      </p>
-      <Btn href={`/${artist.id}/submit`} className='mx-2'>
-        Submit yours
-      </Btn>
-      <Btn onClick={copyCode} className='mx-2' inverted={copied}>
-        {copied ? 'Copied' : share ? 'Share code' : 'Copy code'}
-      </Btn>
+    <div className='fixed z-20 flex items-center justify-center w-screen h-screen text-center normal-text animate-fade-in p-4 pointer-events-none'>
+      <div className='flex flex-col items-center justify-center max-w-full bg-white pointer-events-auto w-max p-7 sm:p-14 sm:block'>
+        <img src='/icons/sad.svg' className='mx-auto mb-10' />
+        <p className='mb-12'>
+          No {artist.name} submissions yet.
+          <br />
+          Submit yours or let your friend know to submit theirs.
+        </p>
+        <Btn href={`/${artist.id}/submit`} className='mx-2 mb-6'>
+          Submit yours
+        </Btn>
+        <Btn onClick={copyCode} className='mx-2' inverted={copied}>
+          {copied ? 'Copied' : share ? 'Share link' : 'Copy link'}
+        </Btn>
+      </div>
     </div>
   )
 }

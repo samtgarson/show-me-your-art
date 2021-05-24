@@ -35,8 +35,10 @@ export const Gallery: FC<{ artist: Artist }> = () => {
             <SubmissionPanel submission={sub} key={sub.id} />
           ))}
         </Masonry>
-        <footer className='flex flex-col items-center justify-center px-12 py-16 pt-32'>
-          <Btn href={`/${artist}`}>Go back to map</Btn>
+        <footer className='flex flex-col items-center justify-center px-12 py-16 pt-28'>
+          <Btn href={`/${artist}`} className='mb-12'>
+            Go back to map
+          </Btn>
           <p className='normal-text'>
             A project by{' '}
             <a className='underline' href='https://samgarson.com'>
