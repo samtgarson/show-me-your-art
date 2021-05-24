@@ -15,7 +15,7 @@ export const Prelaunch: FC = () => {
           </span>
         </div>
       </Marquee>
-      <p className='fixed bottom-0 w-screen left-0 text-center p-4 normal-case font-normal tracking-normal'>
+      <p className='fixed bottom-0 left-0 w-screen p-4 text-center normal-text'>
         A project by{' '}
         <a className='underline' href='https://samgarson.com'>
           Sam Garson

@@ -27,7 +27,7 @@ export const Modal: FC = ({ children }) => {
       initial='hidden'
       animate='visible'
       exit='hidden'
-      className='z-40 left-2 sm:left-auto top-2 bottom-2 sm:bottom-auto sm:top-32 sm:max-w-2xl sm:w-full right-2 sm:right-10 fixed flex flex-col items-start p-10 pt-20 sm:pt-10 overflow-auto tracking-normal text-white normal-case origin-top-right bg-black sm:max-h-[80vh] sm:min-h-[50vh] items-stretch'
+      className='z-40 left-2 sm:left-auto top-2 bottom-2 sm:bottom-auto sm:top-32 sm:max-w-2xl sm:w-full right-2 sm:right-10 fixed flex flex-col items-start p-10 pt-20 sm:pt-10 overflow-auto normal-text text-white origin-top-right bg-black sm:max-h-[80vh] sm:min-h-[50vh] items-stretch'
     >
       <Link href={`/${artist}`}>
         <a className='absolute top-0 right-0 w-8 h-6 m-10 sm:hidden'>

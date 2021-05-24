@@ -6,6 +6,7 @@ import { ViewportProps } from 'react-map-gl'
 import { StateContext } from 'src/services/state'
 import { mapTransition } from 'src/util/map-data'
 import { Artist } from '~/src/artists'
+import { EmptyModal } from './empty-modal'
 import { Map } from './map'
 
 const START_COORDS = { latitude: 51.515579, longitude: -0.12836 }
@@ -20,7 +21,7 @@ const {
 } = config()
 
 export const MapContainer: FC<MapContainerProps> = ({ search, artist }) => {
-  const { start } = useContext(StateContext)
+  const { start, data } = useContext(StateContext)
   const [viewport, setViewport] = useState<ViewportProps>({
     ...START_COORDS,
     zoom: 8
@@ -49,8 +50,9 @@ export const MapContainer: FC<MapContainerProps> = ({ search, artist }) => {
   return (
     <motion.div
       layoutId='map-wrapper'
-      className='absolute h-screen w-screen left-0 top-0'
+      className='absolute top-0 left-0 w-screen h-screen'
     >
+      {Object.keys(data).length === 0 && <EmptyModal artist={artist} />}
       <Map
         {...{
           viewport,

@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { Artist } from '../artists'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { Btn } from './button'
 
 const galleryVariants = {
   hidden: { y: 50, opacity: 0, transition: { ease: 'easeIn' } },
@@ -36,12 +37,8 @@ export const Gallery: FC<{ artist: Artist }> = () => {
           ))}
         </Masonry>
         <footer className='flex flex-col items-center justify-center px-12 py-16 pt-32'>
-          <Link href={`/${artist}`}>
-            <a className='px-4 py-3 mb-12 font-bold border border-black'>
-              Go back to map
-            </a>
-          </Link>
-          <p className='tracking-normal normal-case'>
+          <Btn href={`/${artist}`}>Go back to map</Btn>
+          <p className='normal-text'>
             A project by{' '}
             <a className='underline' href='https://samgarson.com'>
               Sam Garson

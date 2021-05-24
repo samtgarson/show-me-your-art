@@ -65,4 +65,8 @@
     border-right: 6px solid transparent;
     border-top: 6px solid white;
   }
+
+  .normal-text {
+    @apply tracking-normal font-normal normal-case;
+  }
 }
