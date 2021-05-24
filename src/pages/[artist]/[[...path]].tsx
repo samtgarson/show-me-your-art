@@ -14,6 +14,7 @@ import { DataClient } from '~/src/services/data-client'
 import { StateContext } from '~/src/services/state'
 import { Submissions } from '~/types/entities'
 import dynamic from 'next/dynamic'
+import Head from 'next/head'
 
 const MapContainer = dynamic(
   async () => (await import('~/src/components/map/container')).MapContainer
@@ -63,6 +64,9 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
   if (!artist) return null
   return (
     <StateContext.Provider value={{ start, data }}>
+      <Head>
+        <title>Show Me Your {artist.name}</title>
+      </Head>
       <NavBar route={page ?? ''} artist={artist} />
       <AnimateSharedLayout type='crossfade'>
         <MapContainer artist={artist} search={page == 'submit'} />

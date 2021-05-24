@@ -4,7 +4,6 @@ import Masonry from 'react-masonry-css'
 import { SubmissionPanel } from './submission-panel'
 import { motion } from 'framer-motion'
 import { Artist } from '../artists'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Btn } from './button'
 
