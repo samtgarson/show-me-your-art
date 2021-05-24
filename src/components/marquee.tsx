@@ -25,7 +25,7 @@ export const Marquee: FC<MarqueeProps> = ({
           '--move-final': 'calc(-33.3% - var(--offset))'
         } as CSSProperties
       }
-      className={cn(className, 'w-screen relative overflow-x-hidden py-[1vh]')}
+      className={cn(className, 'w-screen relative overflow-hidden py-[1vh]')}
     >
       <div
         className={cn('flex items-center relative w-[fit-content]')}

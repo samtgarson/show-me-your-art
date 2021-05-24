@@ -35,7 +35,7 @@ export const Gallery: FC<{ artist: Artist }> = () => {
             <SubmissionPanel submission={sub} key={sub.id} />
           ))}
         </Masonry>
-        <div className='flex flex-col items-center justify-center px-12 py-16 pt-32'>
+        <footer className='flex flex-col items-center justify-center px-12 py-16 pt-32'>
           <Link href={`/${artist}`}>
             <a className='px-4 py-3 mb-12 font-bold border border-black'>
               Go back to map
@@ -55,7 +55,7 @@ export const Gallery: FC<{ artist: Artist }> = () => {
               hello@showmeyour.art
             </a>
           </p>
-        </div>
+        </footer>
       </motion.section>
     </>
   )

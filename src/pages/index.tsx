@@ -1,11 +1,17 @@
 import cn from 'classnames'
 import { usePresence } from 'framer-motion'
 import { NextPage } from 'next'
+import config from 'next/config'
 import React, { Fragment, useEffect } from 'react'
 import styles from 'src/styles/pages/home.module.scss'
 import { artists } from '../artists'
 import { ArtistLink } from '../components/artist-link'
 import { Marquee } from '../components/marquee'
+import { Prelaunch } from '../components/prelaunch'
+
+const {
+  publicRuntimeConfig: { prelaunch }
+} = config()
 
 const words = 'Show Me Your Art'.split(' ')
 const list = Object.values(artists)
@@ -49,4 +55,4 @@ const Landing: NextPage = () => {
   )
 }
 
-export default Landing
+export default prelaunch ? Prelaunch : Landing
