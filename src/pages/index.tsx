@@ -2,6 +2,7 @@ import cn from 'classnames'
 import { usePresence } from 'framer-motion'
 import { NextPage } from 'next'
 import config from 'next/config'
+import { useRouter } from 'next/router'
 import React, { Fragment, useEffect } from 'react'
 import styles from 'src/styles/pages/home.module.scss'
 import { artists } from '../artists'
@@ -18,6 +19,7 @@ const list = Object.values(artists)
 
 const Landing: NextPage = () => {
   const [isPresent, safeToRemove] = usePresence()
+  const { query } = useRouter()
 
   useEffect(() => {
     !isPresent && safeToRemove && setTimeout(safeToRemove, 1000)
@@ -38,6 +40,7 @@ const Landing: NextPage = () => {
     </Fragment>
   ))
 
+  if (prelaunch && !('preview' in query)) return <Prelaunch />
   return (
     <section className={cn('h-screen flex flex-col justify-center')}>
       <div className={styles.section}>
@@ -55,4 +58,4 @@ const Landing: NextPage = () => {
   )
 }
 
-export default prelaunch ? Prelaunch : Landing
+export default Landing
