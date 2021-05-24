@@ -4,6 +4,7 @@ import React, { FC, useContext, useEffect, useMemo, useRef } from 'react'
 import ReactMapGL, {
   Layer,
   MapRef,
+  NavigationControl,
   Popup,
   Source,
   ViewportProps
@@ -81,7 +82,7 @@ export const Map: FC<MapProps> = ({
         height='100%'
         className={cn({ 'cursor-default pointer-events-none': search })}
       >
-        {/* <NavigationControl style={{ top: 30, right: 30 }} showCompass={false} /> */}
+        <NavigationControl className={styles.zoom} showCompass={false} />
         <Source
           cluster={true}
           clusterProperties={{}}

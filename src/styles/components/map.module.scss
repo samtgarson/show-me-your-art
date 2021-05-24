@@ -12,3 +12,29 @@
     padding: 0;
   }
 }
+
+.zoom {
+  @apply sm:bottom-10 sm:right-10 bottom-2 right-2;
+  :global .mapboxgl-ctrl-group {
+    background: none;
+    box-shadow: none;
+    border-radius: 0px;
+
+    button {
+      background: white;
+      border-radius: 0 !important;
+      border: 0;
+      height: 40px;
+      width: 40px;
+      margin-bottom: 3px;
+
+      &:hover {
+        background-color: rgba(white, 0.7);
+      }
+
+      span {
+        background-size: 50%;
+      }
+    }
+  }
+}

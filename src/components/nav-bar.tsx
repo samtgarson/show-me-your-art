@@ -166,7 +166,7 @@ export const NavBar: FC<{ artist: Artist, route: string }> = ({
         </section>
       </AnimateSharedLayout>{' '}
       <Link href={hidden ? `/${artist.id}` : `/${artist.id}/submit`} passHref>
-        <a className='relative items-center hidden h-full px-4 py-3 overflow-hidden text-center bg-white sm:py-5 sm:px-6 w-28 sm:flex transition-colors duration-500'>
+        <a className='relative items-center justify-center hidden h-full px-4 py-3 overflow-hidden text-center bg-white sm:py-5 sm:px-6 w-28 sm:flex transition-colors duration-500'>
           {hidden ? 'Close' : 'Submit'}
         </a>
       </Link>
