@@ -4,7 +4,7 @@ import {
   usePresence
 } from 'framer-motion'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Artist, artists } from '~/src/artists'
 import { AboutModal } from '~/src/components/about-modal'
 import { Gallery } from '~/src/components/gallery'
@@ -32,12 +32,16 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
   const [data, setData] = useState<Submissions>({})
   const [isPresent, safeToRemove] = usePresence()
   const [showGallery, setShowGallery] = useState(page === 'gallery')
+  const pageRef = useRef<string>()
+  const [previousPage, setPreviousPage] = useState<string>()
 
   useEffect(() => {
     !isPresent && safeToRemove && setTimeout(safeToRemove, 1000)
   }, [isPresent, safeToRemove])
 
   useEffect(() => {
+    if (pageRef.current) setPreviousPage(pageRef.current)
+    if (page) pageRef.current = page
     if (page === null) setShowGallery(false)
     else if (page === 'gallery') setShowGallery(true)
   }, [page])
@@ -71,7 +75,11 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
       <Head>
         <title>Show Me Your {artist.name}</title>
       </Head>
-      <NavBar route={page ?? ''} artist={artist} />
+      <NavBar
+        route={page ?? ''}
+        previousRoute={previousPage ?? ''}
+        artist={artist}
+      />
       <AnimateSharedLayout type='crossfade'>
         <MapContainer artist={artist} search={page == 'submit'} />
         <AnimatePresence>{Page && <Page artist={artist} />}</AnimatePresence>

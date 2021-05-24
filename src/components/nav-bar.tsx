@@ -1,8 +1,7 @@
 import cn from 'classnames/bind'
 import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import React, { FC, MouseEvent, useEffect, useState } from 'react'
+import React, { FC, MouseEvent, useState } from 'react'
 import styles from '~/src/styles/components/nav.module.scss'
 import { Artist } from '../artists'
 
@@ -108,7 +107,7 @@ const HomeButton: FC<{ artist: Artist }> = ({ artist }) => {
             Show me your
           </span>
           <span
-            className='z-10 px-3 py-2 sm:ml-3 text-sm'
+            className='z-10 px-3 py-2 text-sm sm:ml-3'
             style={{ background: artist.bg, color: `var(--text-${artist.fg})` }}
           >
             {artist.name}
@@ -122,25 +121,18 @@ const HomeButton: FC<{ artist: Artist }> = ({ artist }) => {
 const cornerButtonStyles =
   'relative items-center justify-center hidden h-full px-4 py-3 overflow-hidden text-center bg-white cursor-pointer sm:py-5 sm:px-6 w-28 sm:flex transition-colors duration-500'
 
-export const NavBar: FC<{ artist: Artist, route: string }> = ({
-  artist,
-  route
-}) => {
+export const NavBar: FC<{
+  artist: Artist
+  route: string
+  previousRoute: string
+}> = ({ artist, route, previousRoute }) => {
   const [open, setOpen] = useState(false)
-  const [safeToGoBack, setSafeToGoBack] = useState(false)
-  const router = useRouter()
 
   const hidden = ['about', 'submit'].includes(route)
 
   const navClick = (e: MouseEvent) => {
     if ((e.target as HTMLElement).tagName === 'A') setOpen(false)
   }
-
-  useEffect(() => {
-    if (!document.referrer) return
-    const safe = new URL(document.referrer).host === location.host
-    setSafeToGoBack(safe)
-  }, [])
 
   return (
     <nav
@@ -179,15 +171,13 @@ export const NavBar: FC<{ artist: Artist, route: string }> = ({
           </AnimatePresence>
         </section>
       </AnimateSharedLayout>{' '}
-      {hidden && safeToGoBack ? (
-        <a className={cornerButtonStyles} onClick={router.back}>
-          Close
-        </a>
-      ) : (
-        <Link href={hidden ? `/${artist.id}` : `/${artist.id}/submit`}>
-          <a className={cornerButtonStyles}>{hidden ? 'Close' : 'Submit'}</a>
-        </Link>
-      )}
+      <Link
+        href={
+          hidden ? `/${artist.id}/${previousRoute}` : `/${artist.id}/submit`
+        }
+      >
+        <a className={cornerButtonStyles}>{hidden ? 'Close' : 'Submit'}</a>
+      </Link>
     </nav>
   )
 }
