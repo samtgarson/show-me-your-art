@@ -31,10 +31,16 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
   const client = DataClient.useClient()
   const [data, setData] = useState<Submissions>({})
   const [isPresent, safeToRemove] = usePresence()
+  const [showGallery, setShowGallery] = useState(page === 'gallery')
 
   useEffect(() => {
     !isPresent && safeToRemove && setTimeout(safeToRemove, 1000)
   }, [isPresent, safeToRemove])
+
+  useEffect(() => {
+    if (page === null) setShowGallery(false)
+    else if (page === 'gallery') setShowGallery(true)
+  }, [page])
 
   const fetchData = useCallback(async () => {
     const submissions = await client.getSubmissions(artist.id)
@@ -56,8 +62,6 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
         return SubmitModal
       case 'about':
         return AboutModal
-      case 'gallery':
-        return Gallery
     }
   }, [page])
 
@@ -71,6 +75,9 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
       <AnimateSharedLayout type='crossfade'>
         <MapContainer artist={artist} search={page == 'submit'} />
         <AnimatePresence>{Page && <Page artist={artist} />}</AnimatePresence>
+        <AnimatePresence>
+          {showGallery && <Gallery artist={artist} />}
+        </AnimatePresence>
       </AnimateSharedLayout>
     </StateContext.Provider>
   )

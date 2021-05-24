@@ -9,7 +9,7 @@ export const AboutModal: FC<{ artist: Artist }> = () => (
       and the appreciation of it in our spaces.
     </p>
 
-    <p className='text-lg'>
+    <p className='text-lg mb-48'>
       Submit yours and explore where others have theirs.
     </p>
     <small className='px-10 pt-10 mt-auto -mx-10 border-t border-white'>
