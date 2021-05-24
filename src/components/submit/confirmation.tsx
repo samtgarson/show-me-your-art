@@ -7,9 +7,10 @@ export const Confirmation: FC = () => (
     variants={modalVariants.wrapper}
     layout
     transition={{ ease: 'easeOut' }}
+    className='flex-grow flex flex-col'
   >
-    <h2 className='font-bold text-xl mb-48'>Thanks for your submission</h2>
-    <p className='mb-4 text-sm'>
+    <h2 className='mb-auto text-xl font-bold'>Thanks for your submission</h2>
+    <p className='mb-4 text-sm '>
       We will be in touch if we have any questions about your submission. We vet
       all submissions prior to publishing them. For various reasons some might
       not get published.

@@ -94,13 +94,13 @@ export const SubmitForm: FC<SubmitFormProps> = ({ artist, done }) => {
           <Input
             name='name'
             label='Name'
-            placeholder='e.g. Samantha G. or Jonathan & Bobby'
+            placeholder='e.g. Samantha G. or John & Bobby'
           />
           <Input
             name='email'
             label='Email'
             type='email'
-            placeholder='sam.g@email.com'
+            placeholder='Your email will not be shared publicly'
           />
           <Input name='image' component={FileInput} label='Photo' />
           <Input
