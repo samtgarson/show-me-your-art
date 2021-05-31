@@ -23,6 +23,7 @@
     "final-form": "^4.20.2",
     "framer-motion": "^4.1.16",
     "mapbox-gl": "^2.2.0",
+    "matter-js": "^0.17.1",
     "next": "10.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@samtgarson/eslint-config": "^2.4.0",
+    "@types/matter-js": "^0.14.12",
     "@types/react": "^17.0.5",
     "@types/uuid": "^8.3.0",
     "autoprefixer": "^10.2.5",

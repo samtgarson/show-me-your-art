@@ -18,7 +18,7 @@ export const Btn: FC<BtnProps> = ({
     <a
       {...props}
       className={cn(
-        'px-4 py-2 font-bold border border-black uppercase cursor-pointer',
+        'px-4 py-2 font-bold border border-current uppercase cursor-pointer',
         { 'bg-black text-white': inverted },
         className
       )}
