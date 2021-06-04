@@ -1,6 +1,6 @@
 import cn from 'classnames'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import React, { FC, useContext, useEffect, useMemo, useRef } from 'react'
+import React, { FC, useContext, useEffect, useRef } from 'react'
 import ReactMapGL, {
   Layer,
   MapRef,
@@ -43,13 +43,10 @@ export const Map: FC<MapProps> = ({
   token
 }) => {
   const { data } = useContext(StateContext)
-  const json = useMemo(() => data && toGeoJson(data), [data])
+  const json = data && toGeoJson(data)
   const mapRef = useRef<MapRef>(null)
   const popupRef = useRef<HTMLDivElement>(null)
-  const selected = useMemo(
-    () => (selectedId ? data[selectedId] : undefined),
-    [data, selectedId]
-  )
+  const selected = selectedId ? data[selectedId] : undefined
   const { markers } = useMarkers({
     viewport,
     setViewport,
@@ -69,53 +66,51 @@ export const Map: FC<MapProps> = ({
   }, [selected, setViewport])
 
   return (
-    <>
-      <ReactMapGL
-        {...viewport}
-        ref={mapRef}
-        mapboxApiAccessToken={token}
-        onViewportChange={(nextViewport: ViewportProps) => {
-          search || setViewport(nextViewport)
-        }}
-        onClick={_ => setSelected(undefined)}
-        width='100%'
-        height='100%'
-        className={cn({ 'cursor-default pointer-events-none': search })}
+    <ReactMapGL
+      {...viewport}
+      ref={mapRef}
+      mapboxApiAccessToken={token}
+      onViewportChange={(nextViewport: ViewportProps) => {
+        search || setViewport(nextViewport)
+      }}
+      onClick={_ => setSelected(undefined)}
+      width='100%'
+      height='100%'
+      className={cn({ 'cursor-default pointer-events-none': search })}
+    >
+      <NavigationControl className={styles.zoom} showCompass={false} />
+      <Source
+        cluster={true}
+        clusterProperties={{}}
+        id='submissions'
+        type='geojson'
+        data={json}
       >
-        <NavigationControl className={styles.zoom} showCompass={false} />
-        <Source
-          cluster={true}
-          clusterProperties={{}}
-          id='submissions'
-          type='geojson'
-          data={json}
-        >
-          {layerStyles.map(layerStyle => (
-            <Layer key={layerStyle.id} {...layerStyle} />
-          ))}
-        </Source>
+        {layerStyles.map(layerStyle => (
+          <Layer key={layerStyle.id} {...layerStyle} />
+        ))}
+      </Source>
 
-        <>
-          {markers}
-          {selected && (
-            <Popup
-              longitude={selected.coordinates.longitude}
-              latitude={selected.coordinates.latitude}
-              onClose={setSelected}
-              anchor='left'
-              tipSize={0}
-              className={styles.popup}
-              closeButton={false}
-            >
-              <SubmissionPanel
-                ref={popupRef}
-                submission={selected}
-                className='sm:p-6 p-4 w-[50vh] max-w-[90vw]'
-              />
-            </Popup>
-          )}
-        </>
-      </ReactMapGL>
-    </>
+      <>
+        {markers}
+        {selected && (
+          <Popup
+            longitude={selected.coordinates.longitude}
+            latitude={selected.coordinates.latitude}
+            onClose={setSelected}
+            anchor='left'
+            tipSize={0}
+            className={styles.popup}
+            closeButton={false}
+          >
+            <SubmissionPanel
+              ref={popupRef}
+              submission={selected}
+              className='sm:p-6 p-4 w-[50vh] max-w-[90vw]'
+            />
+          </Popup>
+        )}
+      </>
+    </ReactMapGL>
   )
 }

@@ -12,7 +12,7 @@ export const Tooltip: FC = ({ children }) => (
     animate='visible'
     exit='hidden'
     transition={{ ease: 'easeOut', duration: 0.2 }}
-    className='arrow-down absolute left-1/2 bg-white bottom-[120%] text-black whitespace-nowrap uppercase py-3 px-4 text-sm'
+    className='arrow-down absolute left-1/2 bg-white bottom-[120%] text-black whitespace-nowrap py-3 px-4 text-sm'
   >
     {children}
   </motion.caption>

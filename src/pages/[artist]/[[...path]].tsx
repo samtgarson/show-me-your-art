@@ -32,16 +32,16 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
   const [data, setData] = useState<Submissions>({})
   const [isPresent, safeToRemove] = usePresence()
   const [showGallery, setShowGallery] = useState(page === 'gallery')
-  const pageRef = useRef<string>()
-  const [previousPage, setPreviousPage] = useState<string>()
+  const pageRef = useRef<string>('')
+  const [previousPage, setPreviousPage] = useState<string>('')
 
   useEffect(() => {
     !isPresent && safeToRemove && setTimeout(safeToRemove, 1000)
   }, [isPresent, safeToRemove])
 
   useEffect(() => {
-    if (pageRef.current) setPreviousPage(pageRef.current)
-    if (page) pageRef.current = page
+    setPreviousPage(pageRef.current)
+    if (['gallery', null].includes(page)) pageRef.current = page || ''
     if (page === null) setShowGallery(false)
     else if (page === 'gallery') setShowGallery(true)
   }, [page])
@@ -57,7 +57,7 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
 
   useEffect(() => {
     fetchData()
-    setTimeout(() => setStart(true), 0)
+    setTimeout(() => setStart(true), 500)
   }, [fetchData])
 
   const Page = useMemo(() => {
@@ -75,11 +75,7 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
       <Head>
         <title>Show Me Your {artist.name}</title>
       </Head>
-      <NavBar
-        route={page ?? ''}
-        previousRoute={previousPage ?? ''}
-        artist={artist}
-      />
+      <NavBar route={page ?? ''} previousRoute={previousPage} artist={artist} />
       <AnimateSharedLayout type='crossfade'>
         <MapContainer artist={artist} search={page == 'submit'} />
         <AnimatePresence>{Page && <Page artist={artist} />}</AnimatePresence>

@@ -38,7 +38,7 @@ export class MapboxClient {
       `/geocoding/v5/mapbox.places/${search}.json`,
       {
         params: {
-          types: 'region,neighborhood,district,locality',
+          types: 'region,neighborhood,district,locality,place',
           fuzzyMatch: false
         }
       }

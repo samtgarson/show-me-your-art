@@ -1,9 +1,10 @@
 import cn from 'classnames/bind'
 import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion'
 import Link from 'next/link'
-import React, { FC, MouseEvent, useState } from 'react'
+import React, { FC, MouseEvent, useContext, useState } from 'react'
 import styles from '~/src/styles/components/nav.module.scss'
 import { Artist } from '../artists'
+import { StateContext } from '../services/state'
 
 const cx = cn.bind(styles)
 
@@ -49,7 +50,7 @@ const navVariants = {
 const NavItem: FC<{ href: string }> = ({ href, children }) => (
   <motion.li
     variants={navVariants.item}
-    className='py-3 sm:my-0 sm:mx-3 last:pb-1'
+    className='py-3 sm:my-0 sm:mx-3 last:pb-1 sm:py-1'
   >
     <Link href={href}>
       <a>{children}</a>
@@ -62,6 +63,14 @@ const NavItems: FC<{ mobile?: boolean, route: string, artist: string }> = ({
   route,
   artist
 }) => {
+  const { data } = useContext(StateContext)
+  const showMainNav = Object.keys(data).length > 0
+  const mainNav =
+    route == 'gallery' ? (
+      <NavItem href={`/${artist}`}>View map</NavItem>
+    ) : (
+      <NavItem href={`/${artist}/gallery`}>View gallery</NavItem>
+    )
   return (
     <motion.ul
       variants={navVariants.wrapper}
@@ -74,11 +83,7 @@ const NavItems: FC<{ mobile?: boolean, route: string, artist: string }> = ({
       })}
     >
       {mobile && <NavItem href={`/${artist}`}>Home</NavItem>}
-      {route == 'gallery' ? (
-        <NavItem href={`/${artist}`}>View map</NavItem>
-      ) : (
-        <NavItem href={`/${artist}/gallery`}>View gallery</NavItem>
-      )}
+      {showMainNav && mainNav}
       <NavItem href={`/${artist}/about`}>About</NavItem>
       {mobile && <NavItem href={`/${artist}/submit`}>Submit</NavItem>}
     </motion.ul>

@@ -31,8 +31,6 @@ export const useMarkers = ({
   selected,
   setSelected
 }: UseMarkersProps) => {
-  const [markers, setMarkers] = useState<(JSX.Element | undefined)[]>([])
-
   const zoomToCluster = useCallback(
     (id: number, geom: Point) => {
       if (!mapRef) return
@@ -64,39 +62,41 @@ export const useMarkers = ({
     [selected?.id, setSelected, zoomToCluster]
   )
 
-  const updateMarkers = useCallback(() => {
+  const getMarkers = useCallback(() => {
     if (!mapRef) return []
     const map: Map = mapRef.getMap()
     const bounds = map.getBounds()
     const dict: Record<string, boolean> = {}
 
-    const markerArray = map
-      .querySourceFeatures('submissions')
-      .map((feature, i) => {
-        const geom = feature.geometry as Point
-        const id = feature.properties?.cluster
-          ? feature.id
-          : feature.properties?.id
-        if (dict[id]) return
-        dict[id] = true
-        if (!bounds.contains([geom.coordinates[0], geom.coordinates[1]])) return
+    return map.querySourceFeatures('submissions').map((feature, i) => {
+      const geom = feature.geometry as Point
+      const id = feature.properties?.cluster
+        ? feature.id
+        : feature.properties?.id
+      if (dict[id]) return
+      dict[id] = true
+      if (!bounds.contains([geom.coordinates[0], geom.coordinates[1]])) return
 
-        return (
-          <SubmissionMarker
-            {...{ id, feature, geom, onClick, i, artist }}
-            key={id}
-            selectedSubmission={selected}
-            hidden={hidden}
-          />
-        )
-      })
+      return (
+        <SubmissionMarker
+          {...{ id, feature, geom, onClick, i, artist }}
+          key={id}
+          selectedSubmission={selected}
+          hidden={hidden}
+        />
+      )
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapRef, onClick, artist, selected, hidden, viewport])
 
-    setMarkers(markerArray)
-  }, [mapRef, onClick, artist, selected, hidden])
+  const [markers, setMarkers] = useState<(JSX.Element | undefined)[]>(
+    getMarkers()
+  )
 
   useEffect(() => {
-    updateMarkers()
-  }, [updateMarkers, viewport])
+    const markerArray = getMarkers()
+    setMarkers(markerArray)
+  }, [getMarkers, viewport])
 
   return { markers, mapRef }
 }

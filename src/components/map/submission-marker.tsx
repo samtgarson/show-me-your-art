@@ -104,7 +104,7 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
       </Marker>
       {sub && hover && !selected && !hidden && (
         <div
-          className='fixed top-0 left-0 z-40 p-4 bg-white'
+          className='hidden sm:block fixed top-0 left-0 z-40 p-4 bg-white'
           style={{
             transform: `translate(${x + 10}px, ${y + 10}px)`,
             width: 200
