@@ -40,18 +40,9 @@ export const Gallery: FC<{ artist: Artist }> = () => {
             Go back to map
           </Btn>
           <p className='normal-text'>
-            A project by{' '}
-            <a className='underline' href='https://samgarson.com'>
-              Sam Garson
-            </a>{' '}
-            and{' '}
-            <a className='underline' href='https://jamingalea.com'>
-              Jamin Galea
-            </a>{' '}
-            &bull;{' '}
-            <a className='underline' href='mailto:hello@showmeyour.art'>
-              hello@showmeyour.art
-            </a>
+            A project by <a href='https://samgarson.com'>Sam Garson</a> and{' '}
+            <a href='https://jamingalea.com'>Jamin Galea</a> &bull;{' '}
+            <a href='mailto:hello@showmeyour.art'>hello@showmeyour.art</a>
           </p>
         </footer>
       </motion.section>

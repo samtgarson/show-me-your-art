@@ -21,9 +21,7 @@ export const Confirmation: FC = () => (
       like to edit or remove it, please get in touch.
     </p>
     <p className='mb-4 text-sm'>
-      <a href='mailto:hello@showmeyour.art' className='underline'>
-        hello@showmeyour.art
-      </a>
+      <a href='mailto:hello@showmeyour.art'>hello@showmeyour.art</a>
     </p>
   </motion.div>
 )

@@ -3,6 +3,7 @@ export type Artist = {
   name: string
   bg: string
   fg: 'dark' | 'light'
+  link?: { title: string, url: string }
 }
 
 export const artists: Record<string, Artist> = {
@@ -16,7 +17,11 @@ export const artists: Record<string, Artist> = {
     id: 'enzo',
     name: 'Enzo Mari',
     bg: '#0A187F',
-    fg: 'light'
+    fg: 'light',
+    link: {
+      title: 'Danese Milano',
+      url: 'https://www.danesemilano.com/en/'
+    }
   },
   walala: {
     id: 'walala',

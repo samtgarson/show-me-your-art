@@ -112,7 +112,7 @@ export const SubmitForm: FC<SubmitFormProps> = ({ artist, done }) => {
           {error && (
             <p className='flex items-center h-20 px-10 mb-2 -mx-10 text-error bg-errorDark'>
               Something went wrong. Please try again or{' '}
-              <a className='ml-3 underline' href='mailto:hello@showmeyour.art'>
+              <a className='ml-3' href='mailto:hello@showmeyour.art'>
                 let us know!
               </a>
             </p>
