@@ -8,6 +8,7 @@ import styles from 'src/styles/pages/home.module.scss'
 import { artists } from '../artists'
 import { ArtistLink } from '../components/artist-link'
 import { Marquee } from '../components/marquee'
+import { LandingNav } from '../components/nav/landing-nav'
 import { Prelaunch } from '../components/prelaunch'
 
 const {
@@ -53,6 +54,7 @@ const Landing: NextPage = () => {
         'h-screen flex flex-col sm:justify-center justify-start items-start sm:items-stretch pt-[30vh] sm:pt-0'
       )}
     >
+      <LandingNav />
       <div className={cn(styles.section, 'hidden sm:block')}>
         <Marquee offset={0} duration={220}>
           {items}

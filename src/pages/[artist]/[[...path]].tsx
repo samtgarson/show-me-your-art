@@ -4,17 +4,17 @@ import {
   usePresence
 } from 'framer-motion'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
+import dynamic from 'next/dynamic'
+import Head from 'next/head'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Artist, artists } from '~/src/artists'
 import { AboutModal } from '~/src/components/about-modal'
 import { Gallery } from '~/src/components/gallery'
-import { NavBar } from '~/src/components/nav-bar'
+import { ArtistNav } from '~/src/components/nav/artist-nav'
 import { SubmitModal } from '~/src/components/submit/submit-modal'
 import { DataClient } from '~/src/services/data-client'
 import { StateContext } from '~/src/services/state'
 import { Submissions } from '~/types/entities'
-import dynamic from 'next/dynamic'
-import Head from 'next/head'
 
 const MapContainer = dynamic(
   async () => (await import('~/src/components/map/container')).MapContainer
@@ -75,7 +75,11 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
       <Head>
         <title>Show Me Your {artist.name}</title>
       </Head>
-      <NavBar route={page ?? ''} previousRoute={previousPage} artist={artist} />
+      <ArtistNav
+        route={page ?? ''}
+        previousRoute={previousPage}
+        artist={artist}
+      />
       <AnimateSharedLayout type='crossfade'>
         <MapContainer artist={artist} search={page == 'submit'} />
         <AnimatePresence>{Page && <Page artist={artist} />}</AnimatePresence>

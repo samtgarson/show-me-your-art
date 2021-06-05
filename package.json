@@ -6,7 +6,7 @@
     "dev": "next dev --port 5000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ignore-path .gitignore",
+    "lint": "eslint . --ignore-path .gitignore --max-warnings 0",
     "format": "prettier --write `fd -e ts -e tsx`; npm run lint -- --fix",
     "seed:submissions": "node db/seed.js",
     "prepare": "husky install"

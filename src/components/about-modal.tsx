@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { Artist } from '../artists'
 import { Modal } from './modal'
 
-export const AboutModal: FC<{ artist: Artist }> = ({ artist }) => (
+export const AboutModal: FC<{ artist?: Artist }> = ({ artist }) => (
   <Modal>
     <p className='mb-4 text-lg'>
       Show Me Your Art is celebrating the artist, the art traveling the world
@@ -12,7 +12,7 @@ export const AboutModal: FC<{ artist: Artist }> = ({ artist }) => (
     <p className='mb-48 text-lg'>
       Submit yours and explore where others have theirs.
     </p>
-    {artist.link && (
+    {artist?.link && (
       <p className='mb-10'>
         {artist.name} prints available from{' '}
         <a href={artist.link.url}>{artist.link.title}</a>
