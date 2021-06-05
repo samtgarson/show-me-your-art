@@ -3,7 +3,7 @@ import { usePresence } from 'framer-motion'
 import { NextPage } from 'next'
 import config from 'next/config'
 import { useRouter } from 'next/router'
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import styles from 'src/styles/pages/home.module.scss'
 import { artists } from '../artists'
 import { ArtistLink } from '../components/artist-link'
@@ -20,6 +20,7 @@ const list = Object.values(artists)
 const Landing: NextPage = () => {
   const [isPresent, safeToRemove] = usePresence()
   const { query } = useRouter()
+  const [showHint, setShowHint] = useState(false)
 
   useEffect(() => {
     !isPresent && safeToRemove && setTimeout(safeToRemove, 1000)
@@ -40,6 +41,11 @@ const Landing: NextPage = () => {
     </Fragment>
   ))
 
+  useEffect(() => {
+    const timer = setTimeout(() => setShowHint(true), 3000)
+    return () => clearTimeout(timer)
+  }, [])
+
   if (prelaunch && !('preview' in query)) return <Prelaunch />
   return (
     <section className={cn('h-screen flex flex-col justify-center')}>
@@ -54,6 +60,11 @@ const Landing: NextPage = () => {
           {items}
         </Marquee>
       </div>
+      {showHint && (
+        <p className='hidden sm:block fixed bottom-10 left-0 right-0 text-sm normal-text text-center animate-fade-in'>
+          Tap on an artist.
+        </p>
+      )}
     </section>
   )
 }
