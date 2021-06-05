@@ -48,8 +48,12 @@ const Landing: NextPage = () => {
 
   if (prelaunch && !('preview' in query)) return <Prelaunch />
   return (
-    <section className={cn('h-screen flex flex-col justify-center')}>
-      <div className={styles.section}>
+    <section
+      className={cn(
+        'h-screen flex flex-col sm:justify-center justify-start items-start sm:items-stretch pt-[30vh] sm:pt-0'
+      )}
+    >
+      <div className={cn(styles.section, 'hidden sm:block')}>
         <Marquee offset={0} duration={220}>
           {items}
         </Marquee>
@@ -59,12 +63,15 @@ const Landing: NextPage = () => {
         <Marquee duration={150} offset={33}>
           {items}
         </Marquee>
+        {showHint && (
+          <p className='fixed left-0 right-0 text-sm text-center bottom-10 normal-text animate-fade-in'>
+            Tap on an artist.
+          </p>
+        )}
       </div>
-      {showHint && (
-        <p className='hidden sm:block fixed bottom-10 left-0 right-0 text-sm normal-text text-center animate-fade-in'>
-          Tap on an artist.
-        </p>
-      )}
+      {list.map(artist => (
+        <ArtistLink artist={artist} key={artist.id} className='sm:hidden' />
+      ))}
     </section>
   )
 }
