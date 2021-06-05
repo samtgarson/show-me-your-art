@@ -16,8 +16,8 @@ export const Prelaunch: FC = () => {
         </div>
       </Marquee>
       <p className='fixed bottom-0 left-0 w-screen p-4 text-center normal-text'>
-        A project by <a href='https://samgarson.com'>Sam Garson</a> and{' '}
-        <a href='https://jamingalea.com'>Jamin Galea</a>
+        A project by <a href='https://jamingalea.com'>Jamin Galea</a> and{' '}
+        <a href='https://samgarson.com'>Sam Garson</a>
       </p>
     </div>
   )

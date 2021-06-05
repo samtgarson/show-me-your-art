@@ -5,7 +5,7 @@ import { Modal } from './modal'
 export const AboutModal: FC<{ artist?: Artist }> = ({ artist }) => (
   <Modal>
     <p className='mb-4 text-lg'>
-      Show Me Your Art is celebrating the artist, the art traveling the world
+      Show Me Your Art is celebrating the artist, the art travelling the world
       and the appreciation of it in our spaces.
     </p>
 
@@ -20,13 +20,13 @@ export const AboutModal: FC<{ artist?: Artist }> = ({ artist }) => (
     )}
     <small className='px-10 pt-10 mt-auto -mx-10 border-t border-white'>
       A project by{' '}
-      <a href='https://samgarson.com' target='_blank' rel='noreferrer'>
-        Sam Garson
-      </a>{' '}
-      and{' '}
       <a href='https://jamingalea.com' target='_blank' rel='noreferrer'>
         Jamin Galea
       </a>
+      and{' '}
+      <a href='https://samgarson.com' target='_blank' rel='noreferrer'>
+        Sam Garson
+      </a>{' '}
       <br />
       <a href='mailto:hello@showmeyour.art'>hello@showmeyour.art</a>
     </small>
