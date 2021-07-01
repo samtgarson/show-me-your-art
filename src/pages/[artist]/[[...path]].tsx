@@ -12,6 +12,7 @@ import { AboutModal } from '~/src/components/about-modal'
 import { Gallery } from '~/src/components/gallery'
 import { ArtistNav } from '~/src/components/nav/artist-nav'
 import { SubmitModal } from '~/src/components/submit/submit-modal'
+import { SuggestArtistMapButton } from '~/src/components/suggest-an-artist/map-button'
 import { DataClient } from '~/src/services/data-client'
 import { StateContext } from '~/src/services/state'
 import { Submissions } from '~/types/entities'
@@ -81,6 +82,7 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
         artist={artist}
       />
       <AnimateSharedLayout type='crossfade'>
+        <SuggestArtistMapButton />
         <MapContainer artist={artist} search={page == 'submit'} />
         <AnimatePresence>{Page && <Page artist={artist} />}</AnimatePresence>
         <AnimatePresence>

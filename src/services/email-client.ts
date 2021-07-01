@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import { SuggestArtistSchema } from '../components/suggest-an-artist/modal'
 
 const { SMTP_URL, BASE_URL, API_SECRET } = process.env
 if (!SMTP_URL || !BASE_URL || !API_SECRET) throw new Error('Missing env')
@@ -38,6 +39,28 @@ Artist: <strong>${artist}</strong><br />
       to: address,
       subject: '🎉 New Submission',
       text: `New submission for ${artist}`,
+      html
+    })
+  }
+
+  async artistSuggestion ({
+    name,
+    url,
+    email
+  }: SuggestArtistSchema): Promise<void> {
+    const html = `<p>
+Artist: <strong>${name}</strong><br />
+URL: <strong><a href="${url}"${url}</a></strong><br />
+</p>
+<p><em>Reply to this email to respond to the user who suggested this artist.</em></p>
+`
+
+    await this.client.sendMail({
+      from: address,
+      to: address,
+      subject: '👀 New Artist Suggestion',
+      text: `New artist suggestion for ${name}`,
+      replyTo: email,
       html
     })
   }

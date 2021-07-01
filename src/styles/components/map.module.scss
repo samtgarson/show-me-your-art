@@ -14,7 +14,7 @@
 }
 
 .zoom {
-  @apply sm:bottom-10 sm:right-10 bottom-2 right-2;
+  @apply sm:bottom-10 sm:left-10 bottom-2 left-2 z-10;
   :global .mapboxgl-ctrl-group {
     background: none;
     box-shadow: none;

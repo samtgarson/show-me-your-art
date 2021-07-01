@@ -6,7 +6,7 @@ const tooltipVariants = {
   hidden: { opacity: 0, y: 5, x: '-50%' }
 }
 export const Tooltip: FC = ({ children }) => (
-  <motion.caption
+  <motion.span
     variants={tooltipVariants}
     initial='hidden'
     animate='visible'
@@ -15,5 +15,5 @@ export const Tooltip: FC = ({ children }) => (
     className='arrow-down absolute left-1/2 bg-white bottom-[120%] text-black whitespace-nowrap py-3 px-4 text-sm'
   >
     {children}
-  </motion.caption>
+  </motion.span>
 )

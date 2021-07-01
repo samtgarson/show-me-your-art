@@ -1,9 +1,9 @@
-import { motion } from 'framer-motion'
-import React, { FC } from 'react'
 import cn from 'classnames'
-import navStyles from '~/src/styles/components/nav.module.scss'
+import { motion } from 'framer-motion'
 import { useRouter } from 'next/dist/client/router'
 import Link from 'next/link'
+import React, { FC } from 'react'
+import navStyles from '~/src/styles/components/nav.module.scss'
 
 export const modalVariants = {
   modal: {
@@ -16,7 +16,12 @@ export const modalVariants = {
   }
 }
 
-export const Modal: FC = ({ children }) => {
+type ModalProps = {
+  onClose?: () => void
+  bottom?: boolean
+}
+
+export const Modal: FC<ModalProps> = ({ children, onClose, bottom }) => {
   const {
     query: { artist = '' }
   } = useRouter()
@@ -27,14 +32,30 @@ export const Modal: FC = ({ children }) => {
       initial='hidden'
       animate='visible'
       exit='hidden'
-      className='z-40 left-2 sm:left-auto top-2 bottom-2 sm:bottom-auto sm:top-32 sm:max-w-2xl sm:w-full right-2 sm:right-10 fixed flex flex-col items-start p-10 pt-20 sm:pt-10 overflow-auto normal-text text-white origin-top-right bg-black sm:max-h-[80vh] sm:min-h-[50vh] items-stretch'
+      className={cn(
+        'z-40 left-2 sm:left-auto bottom-2 top-2 sm:max-w-2xl sm:w-full right-2 sm:right-10 fixed flex flex-col p-10 pt-20 sm:pt-10 overflow-auto normal-text text-white origin-top-right bg-black sm:max-h-[80vh] sm:min-h-[50vh] items-stretch',
+        {
+          'sm:top-32 sm:bottom-auto': !bottom,
+          'sm:bottom-32 sm:top-auto': bottom
+        }
+      )}
     >
-      <Link href={`/${artist}`}>
-        <a className='absolute top-0 right-0 w-8 h-6 m-10 sm:hidden'>
+      {onClose ? (
+        <a
+          onClick={onClose}
+          className='absolute top-0 right-0 w-8 h-6 m-10 sm:hidden'
+        >
           <span className={cn(navStyles.buttonLine)} />
           <span className={cn(navStyles.buttonLine)} />
         </a>
-      </Link>
+      ) : (
+        <Link href={`/${artist}`}>
+          <a className='absolute top-0 right-0 w-8 h-6 m-10 sm:hidden'>
+            <span className={cn(navStyles.buttonLine)} />
+            <span className={cn(navStyles.buttonLine)} />
+          </a>
+        </Link>
+      )}
       {children}
     </motion.div>
   )
