@@ -32,6 +32,7 @@ export const Modal: FC<ModalProps> = ({ children, onClose, bottom }) => {
       initial='hidden'
       animate='visible'
       exit='hidden'
+      transition={{ type: 'tween' }}
       className={cn(
         'z-40 left-2 sm:left-auto bottom-2 top-2 sm:max-w-2xl sm:w-full right-2 sm:right-10 fixed flex flex-col p-10 pt-20 sm:pt-10 overflow-auto normal-text text-white origin-top-right bg-black sm:max-h-[80vh] sm:min-h-[50vh] items-stretch',
         {

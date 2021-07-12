@@ -1,9 +1,10 @@
 import { AnimatePresence } from 'framer-motion'
 import React, { FC, useState } from 'react'
 import { AboutModal } from '../about-modal'
+import { SuggestArtistModal } from '../suggest-an-artist/modal'
 import { NavBar, NavItem } from './nav-bar'
 
-type Modals = 'about'
+type Modals = 'about' | 'suggest'
 
 export const LandingNav: FC = () => {
   const [modal, setModal] = useState<Modals | null>(null)
@@ -22,11 +23,17 @@ export const LandingNav: FC = () => {
             <NavItem>
               <ModalButton title='About' mod='about' />
             </NavItem>
+            <NavItem>
+              <ModalButton title='Suggest an artist' mod='suggest' />
+            </NavItem>
             {/* <NavItem>Suggest an artist</NavItem> */}
           </>
         }
       />
-      <AnimatePresence>{modal === 'about' && <AboutModal />}</AnimatePresence>
+      <AnimatePresence>
+        {modal === 'about' && <AboutModal />}
+        {modal === 'suggest' && <SuggestArtistModal />}
+      </AnimatePresence>
     </>
   )
 }
