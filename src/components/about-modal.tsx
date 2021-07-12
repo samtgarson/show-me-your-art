@@ -22,7 +22,7 @@ export const AboutModal: FC<{ artist?: Artist }> = ({ artist }) => (
       A project by{' '}
       <a href='https://jamingalea.com' target='_blank' rel='noreferrer'>
         Jamin Galea
-      </a>
+      </a>{' '}
       and{' '}
       <a href='https://samgarson.com' target='_blank' rel='noreferrer'>
         Sam Garson
