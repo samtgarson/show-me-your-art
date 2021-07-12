@@ -35,6 +35,7 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
   const [showGallery, setShowGallery] = useState(page === 'gallery')
   const pageRef = useRef<string>('')
   const [previousPage, setPreviousPage] = useState<string>('')
+  const [showSuggest, setShowSuggest] = useState(true)
 
   useEffect(() => {
     !isPresent && safeToRemove && setTimeout(safeToRemove, 1000)
@@ -45,6 +46,7 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
     if (['gallery', null].includes(page)) pageRef.current = page || ''
     if (page === null) setShowGallery(false)
     else if (page === 'gallery') setShowGallery(true)
+    setShowSuggest([null, 'gallery'].includes(page))
   }, [page])
 
   const fetchData = useCallback(async () => {
@@ -82,7 +84,9 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
         artist={artist}
       />
       <AnimateSharedLayout type='crossfade'>
-        <SuggestArtistMapButton />
+        <AnimatePresence>
+          {showSuggest && <SuggestArtistMapButton />}
+        </AnimatePresence>
         <MapContainer artist={artist} search={page == 'submit'} />
         <AnimatePresence>{Page && <Page artist={artist} />}</AnimatePresence>
         <AnimatePresence>
