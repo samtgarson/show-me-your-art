@@ -1,11 +1,11 @@
-import React, { FC, useContext } from 'react'
-import { StateContext } from '../services/state'
-import Masonry from 'react-masonry-css'
-import { SubmissionPanel } from './submission-panel'
 import { motion } from 'framer-motion'
-import { Artist } from '../artists'
 import { useRouter } from 'next/router'
+import React, { FC, useContext } from 'react'
+import Masonry from 'react-masonry-css'
+import { Artist } from '../artists'
+import { StateContext } from '../services/state'
 import { Btn } from './button'
+import { SubmissionPanel } from './submission-panel'
 
 const galleryVariants = {
   hidden: { y: 50, opacity: 0, transition: { ease: 'easeIn' } },
@@ -32,7 +32,7 @@ export const Gallery: FC<{ artist: Artist }> = () => {
           columnClassName='pl-2 stagger animate-fade-in'
         >
           {Object.values(data).map(sub => (
-            <SubmissionPanel submission={sub} key={sub.id} />
+            <SubmissionPanel submissions={[sub]} key={sub.id} />
           ))}
         </Masonry>
         <footer className='flex flex-col items-center justify-center px-12 py-16 pt-28'>

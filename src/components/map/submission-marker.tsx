@@ -3,11 +3,11 @@ import type { Point } from 'geojson'
 import { MapboxGeoJSONFeature } from 'mapbox-gl'
 import React, { FC, useCallback, useContext, useMemo, useState } from 'react'
 import { Marker } from 'react-map-gl'
-import { SubmissionWithMeta } from '~/types/entities'
+import { submissionImageSrc } from 'src/components/submission-panel'
 import { StateContext } from 'src/services/state'
 import { debounce } from 'src/util/debounce'
-import { submissionImageSrc } from 'src/components/submission-panel'
 import { Artist } from '~/src/artists'
+import { SubmissionWithMeta } from '~/types/entities'
 
 export type MarkerClickEvent =
   | { cluster: true, clusterId: number, geom: Point }

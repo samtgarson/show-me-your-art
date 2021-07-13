@@ -6,8 +6,10 @@ import {
   MarkerClickEvent,
   SubmissionMarker
 } from 'src/components/map/submission-marker'
+import { promisify } from 'util'
 import { SubmissionWithMeta } from '~/types/entities'
 import { Artist } from '../artists'
+import { findSourceDupes } from './find-dupes'
 import { mapTransition } from './map-data'
 
 type UseMarkersProps = {
@@ -32,34 +34,45 @@ export const useMarkers = ({
   setSelected
 }: UseMarkersProps) => {
   const zoomToCluster = useCallback(
-    (id: number, geom: Point) => {
-      if (!mapRef) return
+    async (id: number, source: GeoJSONSource, geom: Point) => {
+      const getZoom = promisify(source.getClusterExpansionZoom.bind(source))
+      const zoom = await getZoom(id)
+      const [lng, lat] = geom.coordinates
       setSelected(undefined)
-      const map: Map = mapRef.getMap()
-      const source = map.getSource('submissions') as GeoJSONSource
-      // eslint-disable-next-line promise/prefer-await-to-callbacks
-      source.getClusterExpansionZoom(id, (err, zoom) => {
-        if (err || !zoom) return
-        const [lng, lat] = geom.coordinates
-        setViewport({
-          ...viewport,
-          zoom: zoom + 0.5,
-          latitude: lat,
-          longitude: lng,
-          ...mapTransition()
-        })
+      setViewport({
+        ...viewport,
+        zoom: zoom + 0.5,
+        latitude: lat,
+        longitude: lng,
+        ...mapTransition()
       })
     },
-    [mapRef, setSelected, setViewport, viewport]
+    [setViewport, viewport, setSelected]
+  )
+
+  const handleClusterClick = useCallback(
+    async (id: number, geom: Point) => {
+      if (!mapRef) return
+      const map: Map = mapRef.getMap()
+      const source = map.getSource('submissions') as GeoJSONSource
+      try {
+        const dupes = await findSourceDupes(source, id)
+        if (dupes.length === 1) return setSelected(dupes[0][0])
+        await zoomToCluster(id, source, geom)
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    [mapRef, zoomToCluster, setSelected]
   )
 
   const onClick = useCallback(
     (evt: MarkerClickEvent) => {
-      if (evt.cluster) zoomToCluster(evt.clusterId, evt.geom)
+      if (evt.cluster) handleClusterClick(evt.clusterId, evt.geom)
       else if (selected?.id === evt.sub.id) setSelected(undefined)
       else setSelected(evt.sub.id)
     },
-    [selected?.id, setSelected, zoomToCluster]
+    [selected?.id, setSelected, handleClusterClick]
   )
 
   const getMarkers = useCallback(() => {

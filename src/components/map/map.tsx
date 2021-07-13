@@ -9,7 +9,6 @@ import ReactMapGL, {
   Source,
   ViewportProps
 } from 'react-map-gl'
-import { SubmissionPanel } from 'src/components/submission-panel'
 import { StateContext } from 'src/services/state'
 import styles from 'src/styles/components/map.module.scss'
 import {
@@ -20,6 +19,7 @@ import {
 } from 'src/util/map-data'
 import { useMarkers } from 'src/util/use-map-markers'
 import { Artist } from '~/src/artists'
+import { PanelWrapper } from './panel-wrapper'
 
 type MapProps = {
   viewport: ViewportProps
@@ -102,8 +102,9 @@ export const Map: FC<MapProps> = ({
             tipSize={0}
             className={styles.popup}
             closeButton={false}
+            closeOnClick={false}
           >
-            <SubmissionPanel
+            <PanelWrapper
               ref={popupRef}
               submission={selected}
               className='sm:p-6 p-4 w-[50vh] max-w-[90vw]'
