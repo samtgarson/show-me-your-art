@@ -1,6 +1,7 @@
 import cn from 'classnames'
+import { AnimatePresence, motion } from 'framer-motion'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import React, { FC, useContext, useEffect, useRef } from 'react'
+import React, { FC, useEffect, useRef } from 'react'
 import ReactMapGL, {
   Layer,
   MapRef,
@@ -9,16 +10,11 @@ import ReactMapGL, {
   Source,
   ViewportProps
 } from 'react-map-gl'
-import { StateContext } from 'src/services/state'
 import styles from 'src/styles/components/map.module.scss'
-import {
-  getPopupLocation,
-  layerStyles,
-  mapTransition,
-  toGeoJson
-} from 'src/util/map-data'
+import { getPopupLocation, layerStyles, mapTransition } from 'src/util/map-data'
 import { useMarkers } from 'src/util/use-map-markers'
 import { Artist } from '~/src/artists'
+import { SubmissionWithMeta } from '~/types/entities'
 import { PanelWrapper } from './panel-wrapper'
 
 type MapProps = {
@@ -28,7 +24,7 @@ type MapProps = {
   ): void
   search: boolean
   artist: Artist
-  selectedId?: string
+  selected?: SubmissionWithMeta
   setSelected(id?: string): void
   token: string
 }
@@ -38,29 +34,30 @@ export const Map: FC<MapProps> = ({
   setViewport,
   search,
   artist,
-  selectedId,
+  selected,
   setSelected,
   token
 }) => {
-  const { data } = useContext(StateContext)
-  const json = data && toGeoJson(data)
   const mapRef = useRef<MapRef>(null)
   const popupRef = useRef<HTMLDivElement>(null)
-  const selected = selectedId ? data[selectedId] : undefined
-  const { markers } = useMarkers({
+  const { markers, json } = useMarkers({
     viewport,
     setViewport,
     artist,
     hidden: search,
     selected,
     setSelected,
-    mapRef: mapRef.current
+    mapRef: mapRef
   })
 
   useEffect(() => {
+    const latLong =
+      window.innerWidth <= 640
+        ? selected?.coordinates
+        : getPopupLocation(mapRef, selected, popupRef)
     setViewport(vp => ({
       ...vp,
-      ...getPopupLocation(mapRef, selected, popupRef),
+      ...latLong,
       ...mapTransition(2000)
     }))
   }, [selected, setViewport])
@@ -93,6 +90,19 @@ export const Map: FC<MapProps> = ({
 
       <>
         {markers}
+        <AnimatePresence>
+          {selected && (
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelected()}
+              className='z-30 bg-white sm:hidden w-16 h-16 flex items-center justify-center fixed right-2 top-2'
+            >
+              <img src='/icons/close-dark.svg' className='w-9 h-9' />
+            </motion.button>
+          )}
+        </AnimatePresence>
         {selected && (
           <Popup
             longitude={selected.coordinates.longitude}
@@ -104,11 +114,7 @@ export const Map: FC<MapProps> = ({
             closeButton={false}
             closeOnClick={false}
           >
-            <PanelWrapper
-              ref={popupRef}
-              submission={selected}
-              className='sm:p-6 p-4 w-[50vh] max-w-[90vw]'
-            />
+            <PanelWrapper ref={popupRef} submission={selected} />
           </Popup>
         )}
       </>

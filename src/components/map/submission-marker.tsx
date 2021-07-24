@@ -1,12 +1,20 @@
 import cn from 'classnames'
 import type { Point } from 'geojson'
-import { MapboxGeoJSONFeature } from 'mapbox-gl'
-import React, { FC, useCallback, useContext, useMemo, useState } from 'react'
+import { GeoJSONSource, MapboxGeoJSONFeature } from 'mapbox-gl'
+import React, {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react'
 import { Marker } from 'react-map-gl'
 import { submissionImageSrc } from 'src/components/submission-panel'
 import { StateContext } from 'src/services/state'
 import { debounce } from 'src/util/debounce'
 import { Artist } from '~/src/artists'
+import { sourceContains } from '~/src/util/find-dupes'
 import { SubmissionWithMeta } from '~/types/entities'
 
 export type MarkerClickEvent =
@@ -22,9 +30,13 @@ type SubmissionMarkerProps = {
   artist: Artist
   hidden?: boolean
   i: number
+  source: GeoJSONSource
 }
 
+const X = '×'
+
 export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
+  source,
   feature,
   selectedSubmission,
   geom,
@@ -35,15 +47,27 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
   i
 }) => {
   const { data } = useContext(StateContext)
-  const { sub, cluster, selected, big, content, notSelected } = useMemo(() => {
+  const [selected, setSelected] = useState(false)
+  const { sub, cluster, big, content, notSelected } = useMemo(() => {
     const sub = data[feature.properties?.id]
     const cluster = feature.properties?.cluster
-    const selected = selectedSubmission?.id == id
     const big = selected || cluster
-    const content = cluster ? feature.properties?.point_count : '×'
+    const content = selected ? X : feature.properties?.point_count
     const notSelected = selectedSubmission && !selected
     return { sub, cluster, selected, big, content, notSelected }
-  }, [data, feature, id, selectedSubmission])
+  }, [data, feature, selectedSubmission, selected])
+
+  useEffect(() => {
+    if (selectedSubmission?.id == id) return setSelected(true)
+
+    if (cluster && id && selectedSubmission) {
+      // eslint-disable-next-line promise/prefer-await-to-then
+      sourceContains(source, id, selectedSubmission.id).then(setSelected)
+      return
+    }
+
+    setSelected(false)
+  }, [id, selectedSubmission, cluster, source])
 
   const clickHandler = useCallback(() => {
     if (cluster) onClick({ cluster: true, clusterId: parseInt(id, 10), geom })
@@ -53,11 +77,11 @@ export const SubmissionMarker: FC<SubmissionMarkerProps> = ({
   const classes = useMemo(
     () =>
       cn(
-        'transition-all flex items-center justify-center text-white cursor-pointer transform hover:scale-110 duration-300',
+        'transition-size flex items-center justify-center text-white cursor-pointer transform hover:scale-110 duration-300',
         {
           relative: !big,
           'font-thin text-3xl': selected,
-          'font-bold text-xl': cluster,
+          'font-bold text-xl': cluster && !selected,
           'opacity-0 pointer-events-none': hidden,
           '': notSelected
         }

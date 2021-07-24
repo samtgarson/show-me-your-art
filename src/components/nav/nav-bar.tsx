@@ -100,7 +100,8 @@ export const NavBar: FC<{
   items: JSX.Element
   cta?: JSX.Element
   hidden?: boolean
-}> = ({ hidden, title, cta, items }) => {
+  hiddenOnMobile?: boolean
+}> = ({ hidden, title, cta, items, hiddenOnMobile }) => {
   const [open, setOpen] = useState(false)
 
   const navClick = (e: MouseEvent) => {
@@ -110,15 +111,16 @@ export const NavBar: FC<{
   return (
     <nav
       className={cn(
-        'sm:top-10 sm:left-10 sm:right-10 top-2 left-2 right-2 sm:h-20 fixed z-40 flex items-start h-16 font-bold',
-        styles.nav
+        'sm:top-10 sm:left-10 sm:right-10 top-2 left-2 right-2 sm:h-20 fixed z-40 flex items-start h-16 font-bold transition-opacity',
+        styles.nav,
+        { 'mobile:opacity-0 mobile:pointer-events-none': hiddenOnMobile }
       )}
     >
       <AnimateSharedLayout type='crossfade'>
         <section
           onClick={navClick}
           className={cn(
-            'relative py-5 px-5 sm:py-5 sm:px-6 mr-1 flex content-stretch sm:items-center flex-grow transition-opacity sm:h-full transform items-start flex-col sm:flex-row',
+            'relative py-5 px-5 sm:py-5 sm:px-6 mr-1 flex content-stretch sm:items-center flex-grow sm:h-full transform items-start flex-col sm:flex-row transition-opacity',
             { 'opacity-0 pointer-events-none': hidden }
           )}
         >

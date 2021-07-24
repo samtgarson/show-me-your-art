@@ -1,5 +1,16 @@
 .popup {
-  @apply bg-transparent p-8;
+  @apply bg-transparent;
+
+  @screen mobile {
+    @apply z-20;
+    position: fixed !important;
+    transform: none !important;
+    left: 0;
+    right: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
 
   @screen sm {
     @apply p-10;

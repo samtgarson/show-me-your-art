@@ -1,6 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import type { Point } from 'geojson'
 import { GeoJSONSource, Map } from 'mapbox-gl'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, {
+  RefObject,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import { MapRef, ViewportProps } from 'react-map-gl'
 import {
   MarkerClickEvent,
@@ -9,15 +17,16 @@ import {
 import { promisify } from 'util'
 import { SubmissionWithMeta } from '~/types/entities'
 import { Artist } from '../artists'
-import { findSourceDupes } from './find-dupes'
-import { mapTransition } from './map-data'
+import { StateContext } from '../services/state'
+import { findSourceDupes, sourceContains } from './find-dupes'
+import { mapTransition, toGeoJson } from './map-data'
 
 type UseMarkersProps = {
   viewport: ViewportProps
   setViewport(viewport: ViewportProps): void
   artist: Artist
   hidden: boolean
-  mapRef: MapRef | null
+  mapRef: RefObject<MapRef>
   selected?: SubmissionWithMeta
   setSelected(id?: string): void
 }
@@ -33,6 +42,18 @@ export const useMarkers = ({
   selected,
   setSelected
 }: UseMarkersProps) => {
+  const { data } = useContext(StateContext)
+  const json = data && toGeoJson(data)
+  const _map = useRef<{ source?: GeoJSONSource, map?: Map }>({})
+  const getSource = () => {
+    if (_map.current.source && _map.current.map) return _map.current
+    if (!mapRef.current) return {}
+    const map: Map = mapRef.current.getMap()
+    const source = map.getSource('submissions') as GeoJSONSource
+    _map.current = { source, map }
+    return _map.current
+  }
+
   const zoomToCluster = useCallback(
     async (id: number, source: GeoJSONSource, geom: Point) => {
       const getZoom = promisify(source.getClusterExpansionZoom.bind(source))
@@ -47,15 +68,19 @@ export const useMarkers = ({
         ...mapTransition()
       })
     },
-    [setViewport, viewport, setSelected]
+    [viewport, setSelected]
   )
 
   const handleClusterClick = useCallback(
     async (id: number, geom: Point) => {
-      if (!mapRef) return
-      const map: Map = mapRef.getMap()
-      const source = map.getSource('submissions') as GeoJSONSource
+      const { source, map } = getSource()
+      if (!source || !map) return
       try {
+        map.getSource('submissions') as GeoJSONSource
+        if (await sourceContains(source, id.toString(), selected?.id)) {
+          return setSelected(undefined)
+        }
+
         const dupes = await findSourceDupes(source, id)
         if (dupes.length === 1) return setSelected(dupes[0][0])
         await zoomToCluster(id, source, geom)
@@ -63,7 +88,7 @@ export const useMarkers = ({
         console.error(e)
       }
     },
-    [mapRef, zoomToCluster, setSelected]
+    [zoomToCluster, setSelected]
   )
 
   const onClick = useCallback(
@@ -76,8 +101,8 @@ export const useMarkers = ({
   )
 
   const getMarkers = useCallback(() => {
-    if (!mapRef) return []
-    const map: Map = mapRef.getMap()
+    const { source, map } = getSource()
+    if (!map || !source) return []
     const bounds = map.getBounds()
     const dict: Record<string, boolean> = {}
 
@@ -96,11 +121,11 @@ export const useMarkers = ({
           key={id}
           selectedSubmission={selected}
           hidden={hidden}
+          source={source}
         />
       )
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mapRef, onClick, artist, selected, hidden, viewport])
+  }, [onClick, artist, selected, hidden, viewport])
 
   const [markers, setMarkers] = useState<(JSX.Element | undefined)[]>(
     getMarkers()
@@ -111,5 +136,5 @@ export const useMarkers = ({
     setMarkers(markerArray)
   }, [getMarkers, viewport])
 
-  return { markers, mapRef }
+  return { markers, json }
 }

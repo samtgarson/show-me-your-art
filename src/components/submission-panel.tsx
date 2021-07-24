@@ -19,6 +19,9 @@ export type SubmissionPanelProps = {
 export const submissionImageSrc = (submission: SubmissionWithMeta): string =>
   `/api/submission-image?artist=${submission.artist}&image_id=${submission.image_id}`
 
+const arrowClasses =
+  'absolute top-1/2 bg-white w-12 h-12 flex items-center justify-center -mt-6'
+
 // eslint-disable-next-line react/display-name
 export const SubmissionPanel = forwardRef<HTMLElement, SubmissionPanelProps>(
   ({ submissions, className, style }, ref) => {
@@ -57,7 +60,7 @@ export const SubmissionPanel = forwardRef<HTMLElement, SubmissionPanelProps>(
               (submissions[0].height / submissions[0].width) * 100
             }%`
           }}
-          className='relative bg-grey'
+          className={cn('relative', { 'bg-grey': !loaded })}
         >
           <AnimatePresence>
             {src && (
@@ -82,34 +85,40 @@ export const SubmissionPanel = forwardRef<HTMLElement, SubmissionPanelProps>(
           <strong className='mr-auto'>{submission.name}</strong>
           <span>{submission.location}</span>
           {submissions.length > 1 && (
-            <>
-              <button
-                onClick={prev}
-                type='button'
-                className='transform rotate-180 ml-6 mr-3'
-              >
-                <img src='/icons/chevron.svg' />
-              </button>
-              <button onClick={next} type='button'>
-                <img src='/icons/chevron.svg' />
-              </button>
-              <div className='w-full flex mt-5 items-end'>
-                {[...Array(submissions.length).keys()].map(i => (
-                  <span
-                    key={i}
-                    className={cn(
-                      'flex-grow mx-2 first:ml-0 last:mr-0 transition-all',
-                      {
-                        'h-px bg-gray-200': i !== index,
-                        'h-0.5 bg-black': i === index
-                      }
-                    )}
-                  />
-                ))}
-              </div>
-            </>
+            <div className='w-full flex mt-6 items-end'>
+              {[...Array(submissions.length).keys()].map(i => (
+                <span
+                  key={i}
+                  className={cn(
+                    'flex-grow mx-2 first:ml-0 last:mr-0 transition-all h-[2px]',
+                    {
+                      'bg-gray-200': i !== index,
+                      'bg-black': i === index
+                    }
+                  )}
+                />
+              ))}
+            </div>
           )}
         </div>
+        {submissions.length > 1 && (
+          <>
+            <button
+              onClick={prev}
+              type='button'
+              className={cn(arrowClasses, 'left-0 transform rotate-180')}
+            >
+              <img src='/icons/chevron.svg' className='w-3' />
+            </button>
+            <button
+              onClick={next}
+              type='button'
+              className={cn(arrowClasses, 'right-0')}
+            >
+              <img src='/icons/chevron.svg' className='w-3' />
+            </button>
+          </>
+        )}
       </article>
     )
   }

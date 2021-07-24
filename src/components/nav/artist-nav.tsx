@@ -41,7 +41,8 @@ export const ArtistNav: FC<{
   artist: Artist
   route: string
   previousRoute: string
-}> = ({ artist, route, previousRoute }) => {
+  selected?: boolean
+}> = ({ artist, route, previousRoute, selected }) => {
   const { data } = useContext(StateContext)
   const showMainNav = Object.keys(data).length > 0
   const slug = artist.id
@@ -79,6 +80,7 @@ export const ArtistNav: FC<{
         </Link>
       }
       hidden={hidden}
+      hiddenOnMobile={selected}
     />
   )
 }

@@ -4,6 +4,9 @@ module.exports = {
   darkMode: false,
   theme: {
     extend: {
+      screens: {
+        mobile: { max: '640px' }
+      },
       spacing: {
         18: '4.5em'
       },
@@ -29,6 +32,9 @@ module.exports = {
       },
       animation: {
         'fade-in': 'fade-in 0.4s ease-out both'
+      },
+      transitionProperty: {
+        size: 'width, height, transform, color, margin'
       }
     }
   }

@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion'
 import config from 'next/config'
-import { useRouter } from 'next/dist/client/router'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { ViewportProps } from 'react-map-gl'
 import { StateContext } from 'src/services/state'
 import { mapTransition } from 'src/util/map-data'
 import { Artist } from '~/src/artists'
+import { SubmissionWithMeta } from '~/types/entities'
 import { EmptyModal } from './empty-modal'
 import { Map } from './map'
 
@@ -14,28 +14,25 @@ const START_COORDS = { latitude: 51.515579, longitude: -0.12836 }
 type MapContainerProps = {
   search: boolean
   artist: Artist
+  setSelected(id?: string): void
+  selected?: SubmissionWithMeta
 }
 
 const {
   publicRuntimeConfig: { mapboxApiToken }
 } = config()
 
-export const MapContainer: FC<MapContainerProps> = ({ search, artist }) => {
+export const MapContainer: FC<MapContainerProps> = ({
+  search,
+  artist,
+  selected,
+  setSelected
+}) => {
   const { start, data } = useContext(StateContext)
   const [viewport, setViewport] = useState<ViewportProps>({
     ...START_COORDS,
     zoom: 8
   })
-  const {
-    query: { path = [] },
-    push
-  } = useRouter()
-  const [route, param] = path as string[]
-  const selectedId = route === 'submission' ? param : undefined
-  const setSelected = (id?: string) => {
-    if (!id) push(`/${artist.id}`)
-    else push(`/${artist.id}/submission/${id}`)
-  }
 
   useEffect(() => {
     if (start)
@@ -58,7 +55,7 @@ export const MapContainer: FC<MapContainerProps> = ({ search, artist }) => {
           viewport,
           setViewport,
           search,
-          selectedId,
+          selected,
           setSelected,
           token: mapboxApiToken,
           artist

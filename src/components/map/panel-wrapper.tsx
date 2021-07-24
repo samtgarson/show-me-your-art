@@ -21,6 +21,13 @@ export const PanelWrapper = forwardRef<HTMLElement, PanelWrapperProps>(
       [data, submission]
     )
 
-    return <SubmissionPanel submissions={subs} {...props} ref={ref} />
+    return (
+      <SubmissionPanel
+        submissions={subs}
+        {...props}
+        ref={ref}
+        className='sm:p-4 w-[100vw] sm:w-[50vh] sm:max-w-[90vw]'
+      />
+    )
   }
 )

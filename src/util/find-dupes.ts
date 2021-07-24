@@ -34,3 +34,19 @@ export const findDataDupes = (
     return arr
   }, [])
 }
+
+export const sourceContains = async (
+  source: GeoJSONSource,
+  clusterId?: string,
+  id?: string
+): Promise<boolean> => {
+  if (!clusterId || !id) return false
+  const getLeaves = promisify(source.getClusterLeaves.bind(source))
+  const leaves = await getLeaves(
+    parseInt(clusterId),
+    Number.POSITIVE_INFINITY,
+    0
+  )
+
+  return leaves.some(feature => feature.id == id)
+}

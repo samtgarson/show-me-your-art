@@ -36,6 +36,8 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
   const pageRef = useRef<string>('')
   const [previousPage, setPreviousPage] = useState<string>('')
   const [showSuggest, setShowSuggest] = useState(true)
+  const [selectedId, setSelected] = useState<string | undefined>()
+  const selected = selectedId ? data[selectedId] : undefined
 
   useEffect(() => {
     !isPresent && safeToRemove && setTimeout(safeToRemove, 1000)
@@ -44,10 +46,11 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
   useEffect(() => {
     setPreviousPage(pageRef.current)
     if (['gallery', null].includes(page)) pageRef.current = page || ''
+
     if (page === null) setShowGallery(false)
     else if (page === 'gallery') setShowGallery(true)
-    setShowSuggest([null, 'gallery'].includes(page))
-  }, [page])
+    setShowSuggest([null, 'gallery'].includes(page) && !selected)
+  }, [page, selected])
 
   const fetchData = useCallback(async () => {
     const submissions = await client.getSubmissions(artist.id)
@@ -82,12 +85,18 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
         route={page ?? ''}
         previousRoute={previousPage}
         artist={artist}
+        selected={!!selected}
       />
       <AnimateSharedLayout type='crossfade'>
         <AnimatePresence>
           {showSuggest && <SuggestArtistMapButton />}
         </AnimatePresence>
-        <MapContainer artist={artist} search={page == 'submit'} />
+        <MapContainer
+          selected={selected}
+          setSelected={setSelected}
+          artist={artist}
+          search={page == 'submit'}
+        />
         <AnimatePresence>{Page && <Page artist={artist} />}</AnimatePresence>
         <AnimatePresence>
           {showGallery && <Gallery artist={artist} />}
@@ -101,17 +110,9 @@ const routes = ['', 'about', 'submit', 'gallery']
 const artistIds = Object.keys(artists)
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const client = DataClient.withCredentials()
   const paths = await Promise.all(
     artistIds.flatMap(async artist => {
-      const subs = await client.getSubmissions(artist)
-      const r = [
-        ...routes.map(path => ({ params: { artist, path: [path] } })),
-        ...subs.map(({ id }) => ({
-          params: { artist, path: ['submission', id] }
-        }))
-      ]
-      return r
+      return routes.map(path => ({ params: { artist, path: [path] } }))
     })
   )
   return { paths: paths.flat(), fallback: true }
@@ -127,7 +128,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async ({ params }) => {
 
   const artist = artists[artistId]
   if (!artist) return { notFound: true }
-  if (routes.includes(page ?? '') || (page === 'submission' && path[0])) {
+  if (routes.includes(page ?? '')) {
     return { props: { artist, page, path } }
   }
 
