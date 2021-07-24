@@ -52,6 +52,10 @@ const Home: NextPage<HomeProps> = ({ page, artist }) => {
     setShowSuggest([null, 'gallery'].includes(page) && !selected)
   }, [page, selected])
 
+  useEffect(() => {
+    setSelected(undefined)
+  }, [page])
+
   const fetchData = useCallback(async () => {
     const submissions = await client.getSubmissions(artist.id)
     const newData = submissions.reduce(
